@@ -18,16 +18,14 @@ const SignupFormSchema = Yup.object().shape({
     acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
 });
 
-function SignupForm() {
+function SignupForm({getSignUpDate}) {
     return (
         <>
             <Formik
                 initialValues={initialValues}
                 validationSchema={SignupFormSchema}
                 onSubmit={(fields) => {
-                    alert(
-                        "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
-                    );
+                    getSignUpDate(fields)
                 }}
             >
                 {({ errors, status, touched }) => (

@@ -1,5 +1,12 @@
 import Link from "next/link";
+import { useState } from "react";
 function Otp2() {
+
+    const [code,setCode]=useState();
+
+    const sendHandler=()=>{
+        
+    }
     return (
         <>
             <div className="authincation section-padding">
@@ -34,6 +41,7 @@ function Otp2() {
                                                     </span>
                                                 </div>
                                                 <input
+                                                    onChange={(e)=>{setCode(e.target.value)}}
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="verification code"
@@ -43,7 +51,8 @@ function Otp2() {
                                         <div className="col-12">
                                             <div className="text-center">
                                                 <button
-                                                    type="submit"
+                                                    onClick={sendHandler}
+                                                    type="button"
                                                     className="btn btn-primary btn-block"
                                                 >
                                                     Send

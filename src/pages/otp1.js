@@ -1,5 +1,43 @@
 import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
+import { getAuth, PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import { app } from "../utils/firebase"
+import { signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { RecaptchaVerifier } from "firebase/auth";
+import { useRouter } from "next/router";
+
 function Otp1() {
+    const router = useRouter()
+
+    const generateCaptcha = () => {
+        console.log("111111111111")
+        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+                console.log("222222222222222")
+                console.log(response)
+            }
+        }, auth);
+    }
+
+    async function comfirmHandler() {
+        try {
+            generateCaptcha();
+            const appVerifier = window.recaptchaVerifier
+
+            signInWithPhoneNumber(auth, '+923401477376', appVerifier)
+                .then((res) => {
+                    window.confirmCode = res
+                    router.push('/otp2');
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
         <>
             <div className="authincation section-padding">
@@ -7,14 +45,12 @@ function Otp1() {
                     <div className="row justify-content-center h-100 align-items-center">
                         <div className="col-xl-5 col-md-6">
                             <div className="mini-logo text-center my-12">
-                            <Link href="/">
-                                    
-                                        <img src="./images/logo.png" alt="" />
-                                    
+                                <Link href="/">
+                                    <img src="./images/logo.png" alt="" />
                                 </Link>
                             </div>
                             <div className="card">
-                            <div className="card-header justify-content-center">
+                                <div className="card-header justify-content-center">
                                     <h4 className="card-title"> 2-Step Verification</h4>
                                 </div>
                                 <div className="card-body">
@@ -785,7 +821,7 @@ function Otp1() {
                                             <div className="input-group">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">
-                                                        +880
+                                                        +92
                                                     </span>
                                                 </div>
                                                 <input
@@ -805,25 +841,22 @@ function Otp1() {
                                             </small>
                                         </div>
                                         <div className="text-center mt-20">
-                                            <button
-                                                type="submit"
-                                                className="btn btn-primary w-100"
-                                            >
+                                            <button onClick={comfirmHandler} type="button" className="btn btn-primary w-100">
                                                 Send Code
                                             </button>
                                         </div>
+                                        <div id="recaptcha-container"></div>
                                     </form>
-                                    
+
                                 </div>
                                 <div className="new-account mt-16">
-                                        <p>
-                                            Don't get code?
-                                            <Link href="/otp1">
-                                                Resend
-                                            
-                                            </Link>
-                                        </p>
-                                    </div>
+                                    <p>
+                                        Don't get code?
+                                        <Link href="#">
+                                            Resend
+                                        </Link>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

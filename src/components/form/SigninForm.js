@@ -1,6 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
+
 const initialValues = {
     email: "",
     password: "",
@@ -13,13 +14,17 @@ const SigninFormSchema = Yup.object().shape({
         .required("Password is required"),
 });
 
-function SigninForm() {
+
+
+function SigninForm({getCredentials}) {
+
     return (
         <>
             <Formik
                 initialValues={initialValues}
                 validationSchema={SigninFormSchema}
                 onSubmit={(fields) => {
+                    getCredentials(fields);
                     alert(
                         "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
                     );
