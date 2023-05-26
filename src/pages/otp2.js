@@ -1,11 +1,31 @@
+import { db } from "@/utils/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+
 function Otp2() {
 
-    const [code,setCode]=useState();
+    const user = useSelector((state) => state.user.user);
+    const router=useRouter();
+    const [code, setCode] = useState();
 
-    const sendHandler=()=>{
-        
+    const sendHandler = async() => {
+        try {
+            const comfirmResult=window.confirmCode;
+            comfirmResult.confirm(code).then(async(result)=>{
+                console.log(user);
+                const docRef = doc(db, 'users', user.uid);
+                await updateDoc(docRef, {
+                    phone: phone,
+                    phoneVerified: true
+                })
+                router.push('/')
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
         <>
@@ -15,9 +35,9 @@ function Otp2() {
                         <div className="col-xl-5 col-md-6">
                             <div className="mini-logo text-center my-12">
                                 <Link href="/">
-                                    
-                                        <img src="./images/logo.png" alt="" />
-                                    
+
+                                    <img src="./images/logo.png" alt="" />
+
                                 </Link>
                             </div>
                             <div className="card">
@@ -41,7 +61,7 @@ function Otp2() {
                                                     </span>
                                                 </div>
                                                 <input
-                                                    onChange={(e)=>{setCode(e.target.value)}}
+                                                    onChange={(e) => { setCode(e.target.value) }}
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="verification code"
@@ -86,8 +106,8 @@ function Otp2() {
                                 <p>
                                     Don't get code?
                                     <Link href="/otp1">
-                                            Resend
-                                        
+                                        Resend
+
                                     </Link>
                                 </p>
                             </div>

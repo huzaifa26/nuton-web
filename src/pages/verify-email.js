@@ -14,7 +14,6 @@ function Test() {
 		setCounter(59);
 		try {
 			const result = await sendEmailVerification(auth.currentUser);
-			console.log("Email sent");
 			// navigation.navigate("VerifyYourPhoneNumber")
 		} catch (error) {
 			console.log(error);
@@ -29,26 +28,25 @@ function Test() {
 					return prev - 1
 				})
 			}
+		}, 1000)
 
+		const intervalId2 = setInterval(async () => {
 			auth.currentUser.reload();
-			console.log(auth.currentUser.emailVerified)
 			if (auth.currentUser.emailVerified) {
 				const docRef = doc(db, 'users', auth.currentUser.uid)
 				await updateDoc(docRef, {
 					emailVerified: true
 				}).then(() => {
-					console.log('Email has been verified');
 					router.push('/otp1');
-					clearInterval(intervalId);
 				})
-				console.log('Email has been verified');
 			} else {
 				
 			}
-		}, 1000)
+		}, 5000)
 
 		return () => {
 			clearInterval(intervalId);
+			clearInterval(intervalId2);
 		}
 	}, [])
 

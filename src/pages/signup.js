@@ -5,8 +5,13 @@ import { auth, db } from "../utils/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
+import { setUser } from "@/redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
+
 function Signin() {
-  const router=useRouter()
+  const router=useRouter();
+  const dispatch=useDispatch()
+
   const sendVerificationEmail = async () => {
     try {
       const result = await sendEmailVerification(auth.currentUser);
@@ -28,11 +33,12 @@ function Signin() {
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (userCredentials) => {
         delete d.password;
-        data.uid = userCredentials.user.uid
+        d.uid = userCredentials.user.uid
         await setDoc(doc(db, "users", userCredentials.user.uid), d);
         const result = await signInWithEmailAndPassword(auth, data.email, data.password);
         const userRef = doc(db, "users", result.user.uid);
         const user = await getDoc(userRef);
+        dispatch(setUser(user.data()));
         await sendVerificationEmail(d.email);
         router.push("/verify-email");
       })

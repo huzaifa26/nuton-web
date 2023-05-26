@@ -37,7 +37,6 @@ function Wizard() {
         <StepTwo next={handleNextStep} prev={handlePrevStep} data={data} />,
     ];
 
-    // console.log("data", data);
 
     return <>{steps[currentStep]}</>;
 }

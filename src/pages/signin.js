@@ -3,16 +3,19 @@ import SigninForm from "../components/form/SigninForm";
 import { auth, db } from "../utils/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
-
+import { setUser } from "@/redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
 
 function Signin() {
+
+    const dispatch=useDispatch()
 
     const getCredentials=async(data)=>{
         try {
             const result = await signInWithEmailAndPassword(auth, data.email, data.password);
             const userRef = doc(db, "users", result.user.uid);
             const user = await getDoc(userRef);
-            console.log(user.data());
+            dispatch(setUser(user.data()));
         } catch (e) {
             ToastAndroid.show(e.message, ToastAndroid.SHORT);
             throw new Error(e.message);

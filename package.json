@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
     "autoprefixer": "10.4.5",
     "bootstrap": "^5.2.3",
     "eslint": "8.41.0",
