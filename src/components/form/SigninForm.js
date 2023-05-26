@@ -25,9 +25,6 @@ function SigninForm({getCredentials}) {
                 validationSchema={SigninFormSchema}
                 onSubmit={(fields) => {
                     getCredentials(fields);
-                    alert(
-                        "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
-                    );
                 }}
             >
                 {({ errors, status, touched }) => (

@@ -30,7 +30,7 @@ function Otp1() {
       signInWithPhoneNumber(auth, countryCode + phone, appVerifier)
         .then((res) => {
           window.confirmCode = res
-          router.push('/otp2');
+          router.push({pathname:"/otp2",query:countryCode + phone});
         })
     } catch (error) {
       console.log(error)
