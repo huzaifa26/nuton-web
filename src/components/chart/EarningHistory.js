@@ -1,7 +1,7 @@
 import { Bar } from "react-chartjs-2";
-import { Chart, CategoryScale, LinearScale, PointElement,LineElement,BarElement,ArcElement } from "chart.js";
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement } from "chart.js";
 
-Chart.register(CategoryScale, LinearScale, PointElement,LineElement,BarElement,ArcElement);
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement);
 
 function EarningHistory({ earningHistory }) {
     const data = {
@@ -24,14 +24,14 @@ function EarningHistory({ earningHistory }) {
                 label: "Visit",
                 backgroundColor: "rgba(32, 212, 137, 1)",
                 borderColor: "transparent",
-                data: earningHistory.facebook,
+                data: earningHistory?.facebook,
                 borderWidth: 2,
             },
             {
                 label: "Sales",
                 backgroundColor: "rgba(32, 212, 137, 0.15)",
                 borderColor: "transparent",
-                data: earningHistory.youtube,
+                data: earningHistory?.youtube,
                 borderWidth: 2,
             },
         ],

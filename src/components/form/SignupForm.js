@@ -1,6 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
+import Loader from "../widget/Loader";
 
 const initialValues = {
     fullName: "",
@@ -18,7 +19,7 @@ const SignupFormSchema = Yup.object().shape({
     acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
 });
 
-function SignupForm({getSignUpDate}) {
+function SignupForm({ getSignUpDate, loading }) {
     return (
         <>
             <Formik
@@ -72,7 +73,7 @@ function SignupForm({getSignUpDate}) {
                                 <label className="form-label">Password</label>
                                 <Field
                                     name="password"
-                                    type="text"
+                                    type="password"
                                     className={
                                         "form-control" +
                                         (errors.password && touched.password
@@ -114,9 +115,9 @@ function SignupForm({getSignUpDate}) {
                         <div className="mt-16 d-grid gap-2">
                             <button
                                 type="submit"
-                                className="btn btn-primary mr-2"
+                                className="btn btn-primary mr-2 absolute text-white"
                             >
-                                Sign Up
+                                {loading ? <Loader className="text-[#ffffff]" /> : 'Sign up'}
                             </button>
                         </div>
                     </Form>

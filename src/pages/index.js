@@ -34,7 +34,7 @@ function Home({ earningHistory, totalSales }) {
                         >
                             <div className="card-header">
                                 <h4 className="card-title">
-                                    {earningHistory.name}
+                                    {earningHistory?.name}
                                 </h4>
                             </div>
 
@@ -145,7 +145,7 @@ function Home({ earningHistory, totalSales }) {
 }
 
 const mapStateToProps = (state) => ({
-    earningHistory: state.EarningHistory.expenses,
-    totalSales: state.TotalSales.statistics,
+    earningHistory: state?.EarningHistory?.expenses,
+    totalSales: state?.TotalSales?.statistics,
 });
 export default connect(mapStateToProps, {})(Home);

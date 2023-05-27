@@ -1,37 +1,44 @@
+import { setUser, userActions } from "@/redux/reducers/userSlice";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import SigninForm from "../components/form/SigninForm";
 import { auth, db } from "../utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
-import { setUser } from "@/redux/reducers/userSlice";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 function Signin() {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false)
 
-    const dispatch=useDispatch();
-    const router=useRouter();
-
-    const getCredentials=async(data)=>{
+    const getCredentials = async (data) => {
+        setLoading(true)
         try {
             const result = await signInWithEmailAndPassword(auth, data.email, data.password);
             const userRef = doc(db, "users", result.user.uid);
             const user = await getDoc(userRef);
-            const u=user.data();
-            dispatch(setUser(u));
-            if(!u.emailVerified){
-                router.push('/verify-email');
+            const u = user.data();
+            dispatch(userActions.userInfo(u));
+            if (!u.emailVerified) {
+                router.push({
+                    pathname: '/verify-email',
+                    query: { email: data.email }, // example state data
+                });
                 return
             }
-            if(!u.phoneVerified){
+            if (!u.phoneVerified) {
                 router.push('/otp1');
                 return
             }
-
             router.push('/');
         } catch (e) {
-            ToastAndroid.show(e.message, ToastAndroid.SHORT);
-            throw new Error(e.message);
+            console.log(e.message);
+            toast.error('Invalid credentials');
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -51,7 +58,7 @@ function Signin() {
                                     <h4 className="card-title">Sign in</h4>
                                 </div>
                                 <div className="card-body">
-                                    <SigninForm getCredentials={getCredentials}/>
+                                    <SigninForm getCredentials={getCredentials} loading={loading} />
                                     <p className="mt-16 mb-0">
                                         Don't have an account?
                                         <Link href="/signup">

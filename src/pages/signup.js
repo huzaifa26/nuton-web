@@ -1,35 +1,38 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import SignupForm from "./../components/form/SignupForm";
-import { auth, db } from "../utils/firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { auth, db } from "../utils/firebase";
+import SignupForm from "./../components/form/SignupForm";
 import { setUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
+import { toast } from 'react-toastify'
+import { useState } from "react";
 
 function Signin() {
-  const router=useRouter();
-  const dispatch=useDispatch()
+  const router = useRouter();
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
 
   const sendVerificationEmail = async () => {
     try {
       const result = await sendEmailVerification(auth.currentUser);
-      console.log("email sent");
+      toast.success('Email verification sent')
     } catch (error) {
       console.log(error);
     }
   }
 
   const getSignUpDate = async (data) => {
+    setLoading(true)
     let d = {
       name: data.fullName,
       email: data.email,
       password: data.password,
       phoneVerified: false,
       emailVerified: false,
-      signinFrom:"web"
-  }
+      signinFrom: "web"
+    }
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (userCredentials) => {
         delete d.password;
@@ -40,10 +43,18 @@ function Signin() {
         const user = await getDoc(userRef);
         dispatch(setUser(user.data()));
         await sendVerificationEmail(d.email);
-        router.push("/verify-email");
+        router.push({
+          pathname: '/verify-email',
+          query: { email: data.email }, // example state data
+        });
       })
       .catch((error) => {
-        console.log(error);
+        if (error.code === 'auth/email-already-in-use')
+          toast.error('You have account already')
+        console.log(error.code);
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
@@ -63,7 +74,7 @@ function Signin() {
                   <h4 className="card-title">Sign up</h4>
                 </div>
                 <div className="card-body">
-                  <SignupForm getSignUpDate={getSignUpDate} />
+                  <SignupForm getSignUpDate={getSignUpDate} loading={loading} />
                   <div className="text-center">
                     <p className="mt-16 mb-0">
                       Have account?

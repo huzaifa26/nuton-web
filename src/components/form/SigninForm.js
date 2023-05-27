@@ -1,6 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
+import Loader from "../widget/Loader";
 
 const initialValues = {
     email: "",
@@ -16,7 +17,7 @@ const SigninFormSchema = Yup.object().shape({
 
 
 
-function SigninForm({getCredentials}) {
+function SigninForm({ getCredentials, loading }) {
 
     return (
         <>
@@ -69,23 +70,23 @@ function SigninForm({getCredentials}) {
                             </div>
                             <div className="col-6">
                                 <div className="form-check">
-                                <Field
-                                    type="checkbox"
-                                    name="acceptTerms"
-                                    className={
-                                        "form-check-input "
-                                    }
-                                />
-                                <label
-                                    className="form-check-label"
-                                >
-                                    Remember me
-                                </label>
+                                    <Field
+                                        type="checkbox"
+                                        name="acceptTerms"
+                                        className={
+                                            "form-check-input "
+                                        }
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                    >
+                                        Remember me
+                                    </label>
                                 </div>
                             </div>
                             <div className="col-6 text-end">
                                 <Link href="/reset">
-                                Forgot Password?
+                                    Forgot Password?
                                 </Link>
                             </div>
                         </div>
@@ -93,9 +94,9 @@ function SigninForm({getCredentials}) {
                         <div className="mt-16 d-grid gap-2">
                             <button
                                 type="submit"
-                                className="btn btn-primary mr-2"
+                                className="btn btn-primary mr-2 absolute text-white"
                             >
-                                Sign In
+                                {loading ? <Loader /> : 'Sign up'}
                             </button>
                         </div>
                     </Form>
