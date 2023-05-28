@@ -16,7 +16,8 @@ function Profile() {
 				<div className="row">
 					<div className="col-xl-8">
 						<div className="row">
-							<div className="col-xxl-6 col-xl-6 col-lg-6">
+
+							<div className="col-xxl-12 col-xl-6 col-lg-6">
 								<div className="card welcome-profile">
 									<div className="card-body">
 										<div className="d-flex align-items-center mb-10">
@@ -40,23 +41,24 @@ function Profile() {
 										</div>
 
 										<ul>
-											<li>
+											<li style={{display:"flex",alignItems:"center"}} className="">
 												<span className="verified">
 													<i className="ri-check-line"></i>
 												</span>
 												Verify account
 											</li>
-											<li>
+											{/* <li>
 												<span className="not-verified">
 													<i className="ri-shield-check-line"></i>
 												</span>
 												Two-factor authentication
 												(2FA)
-											</li>
+											</li> */}
 										</ul>
 									</div>
 								</div>
 							</div>
+{/* 
 							<div className="col-xxl-6 col-xl-6 col-lg-6">
 								<div className="card">
 									<div className="card-body">
@@ -83,7 +85,8 @@ function Profile() {
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> */}
+							
 							<div className="col-xxl-12">
 								<div className="card">
 									<div className="card-header">
