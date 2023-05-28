@@ -50,7 +50,7 @@ function Demo() {
                         <div className="row">
                             <div className="col-xl-4 col-md-4 col-sm-6">
                                 <div className="demo_img">
-                                    <Link href="/">
+                                    <Link href="/dashboard">
                                         
                                             <div className="img-wrap">
                                                 <img
@@ -274,7 +274,7 @@ function Demo() {
                             </div>
                             <div className="col-xl-4 col-md-4 col-sm-6">
                                 <div className="demo_img">
-                                    <Link href="/signin">
+                                    <Link href="/">
                                         
                                             <div className="img-wrap">
                                                 <img

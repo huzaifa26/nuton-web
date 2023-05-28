@@ -4,20 +4,17 @@ import { useEffect, useState } from "react";
 import { sendEmailVerification, getAuth, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../utils/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
 
 function Test() {
 	const router = useRouter();
 	const [counter, setCounter] = useState(59);
-	const { email } = router.query;
 
-	console.log(auth.currentUser);
+
 	const sendVerificationEmail = async (e) => {
 		setCounter(59);
 		try {
 			const result = await sendEmailVerification(auth.currentUser);
 			// navigation.navigate("VerifyYourPhoneNumber")
-			toast.success('Email sent successfully')
 		} catch (error) {
 			console.log(error);
 		}
@@ -43,7 +40,7 @@ function Test() {
 					router.push('/otp1');
 				})
 			} else {
-
+				
 			}
 		}, 5000)
 
@@ -61,8 +58,10 @@ function Test() {
 					<div className="row justify-content-center h-100 align-items-center">
 						<div className="col-xl-5 col-md-6">
 							<div className="mini-logo text-center my-16">
-								<Link href="/">
+								<Link href="/dashboard">
+
 									<img src="./images/logo.png" alt="" />
+
 								</Link>
 							</div>
 							<div className="card">
@@ -81,7 +80,7 @@ function Test() {
 												We sent verification email to
 												&nbsp;
 												<strong className="text-dark">
-													{email}
+													example@email.com
 												</strong>
 												. Click the link inside to get
 												started!
@@ -93,7 +92,7 @@ function Test() {
 							<div>
 								Email didn't arrive?
 								{counter > 0 ? "Resend in " + counter :
-									<Link className="cursor-pointer" onClick={sendVerificationEmail} href={"#"}>
+									<Link onClick={sendVerificationEmail} href={"#"}>
 										Resend
 									</Link>
 								}

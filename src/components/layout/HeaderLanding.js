@@ -7,7 +7,7 @@ function HeaderLanding() {
                     <div className="row">
                         <div className="col-xl-12">
                             <nav className="navbar">
-                                <Link href="/">
+                                <Link href="/dashboard">
                                     
                                         <img src="./images/logo.png" alt="" />
                                     

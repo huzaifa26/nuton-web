@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import '../../public/css/style.css';
 import store from '../redux/store';
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
     return (

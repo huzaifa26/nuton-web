@@ -1,151 +1,80 @@
-import dynamic from "next/dynamic";
-import { connect } from "react-redux";
-import BarChart from "../components/chart/EarningHistory";
-import TotalSales from "../components/chart/TotalSales";
-import StudentQueries from "../components/elements/StudentQueries";
-import TrafficAnalytics from "../components/elements/TrafficAnalytics";
-import Layout from "../components/layout/Layout";
-import BalanceState from "../components/widget/BalanceState";
-import RecentNotification from "./../components/elements/RecentNotification";
-import StatsWidget from "./../components/widget/StatsWidget";
-const DataMap = dynamic(() => import("../components/elements/DataMap"), {
-    ssr: false,
-});
+import Link from "next/link";
+import SigninForm from "../components/form/SigninForm";
+import { auth, db } from "../utils/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
+import { setUser } from "@/redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
-function Home({ earningHistory, totalSales }) {
+function Signin() {
+
+    const dispatch=useDispatch();
+    const router=useRouter();
+
+    const getCredentials=async(data)=>{
+        try {
+            const result = await signInWithEmailAndPassword(auth, data.email, data.password);
+            const userRef = doc(db, "users", result.user.uid);
+            const user = await getDoc(userRef);
+            const u=user.data();
+            dispatch(setUser(u));
+            if(!u.emailVerified){
+                router.push('/verify-email');
+                return
+            }
+            if(!u.phoneVerified){
+                router.push('/otp1');
+                return
+            }
+
+            router.push('/');
+        } catch (e) {
+            ToastAndroid.show(e.message, ToastAndroid.SHORT);
+            throw new Error(e.message);
+        }
+    }
+
     return (
         <>
-            <Layout
-                headTitle="Dashboard"
-                pageTitle="Dashboard"
-                pageTitleSub={"Welcome to Edunet Dashboard"}
-                pageClass={"dashboard"}
-                parent={"Home"}
-                child={"Dashboard"}
-            >
-                <div className="row">
-                    <StatsWidget />
-
-                    <div className="col-lg-6 col-xxl-7">
-                        <div
-                            id="user-activity"
-                            className="card"
-                            data-aos="fade-up"
-                        >
-                            <div className="card-header">
-                                <h4 className="card-title">
-                                    {earningHistory?.name}
-                                </h4>
+            <div className="authincation section-padding">
+                <div className="container h-100">
+                    <div className="row justify-content-center h-100 align-items-center">
+                        <div className="col-xl-5 col-md-6">
+                            <div className="mini-logo text-center mb-35">
+                                <Link href="/dashboard">
+                                    <img src="./images/logo.png" alt="" />
+                                </Link>
                             </div>
-
-                            <div className="card-body">
-                                <BarChart earningHistory={earningHistory} />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-6 col-xxl-5">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">
-                                    Recent Notification{" "}
-                                </h4>
-                                View All
-                            </div>
-                            <div className="card-body">
-                                <div className="recent-notification">
-                                    <div
-                                        className="notification-list"
-                                        style={{ height: "275px" }}
-                                    >
-                                        <RecentNotification />
-                                    </div>
+                            <div className="card">
+                                <div className="card-header justify-content-center">
+                                    <h4 className="card-title">Sign in</h4>
+                                </div>
+                                <div className="card-body">
+                                    <SigninForm getCredentials={getCredentials}/>
+                                    <p className="mt-16 mb-0">
+                                        Don't have an account?
+                                        <Link href="/signup">
+                                            Sign up
+                                        </Link>
+                                    </p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-6 col-xl-4 ">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Total Sales</h4>
-                            </div>
-                            <div className="card-body">
-                                <TotalSales totalSales={totalSales} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-8 ">
-                        <div className="card">
-                            <div className="card-header">
-                                <h5 className="card-title">Student Queries</h5>
-                            </div>
-                            <div className="card-body">
-                                <StudentQueries />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-3">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Balance</h4>
-                            </div>
-                            <div className="card-body">
-                                <div className="total-balance">
-                                    <p>Available Balance</p>
-                                    <h2>$221,478</h2>
-                                </div>
-                                <BalanceState />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-9">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Student Location</h4>
-                            </div>
-                            <div className="card-body text-center">
-                                <DataMap />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-12">
-                        <div className="card transparent">
-                            <div className="card-header">
-                                <h4 className="card-title">Trafic Analytics</h4>
-                            </div>
-                            <div className="card-body">
-                                <div className="rtable rtable--5cols rtable--collapse">
-                                    <div className="rtable-row rtable-row--head bg-transparent">
-                                        <div className="rtable-cell topic-cell column-heading text-dark">
-                                            <strong>Name</strong>
-                                        </div>
-                                        <div className="rtable-cell traffic-cell column-heading text-dark">
-                                            <strong>Traffic</strong>
-                                        </div>
-                                        <div className="rtable-cell source-cell column-heading text-dark">
-                                            <strong>Source</strong>
-                                        </div>
-                                        <div className="rtable-cell referrals-cell column-heading text-dark">
-                                            <strong>Referrals</strong>
-                                        </div>
-                                        <div className="rtable-cell trend-cell column-heading text-dark">
-                                            <strong>Trend</strong>
-                                        </div>
-                                    </div>
-                                    <TrafficAnalytics />
-                                </div>
+                            <div className="privacy-link">
+                                <Link href="#">
+                                    Have an issue with 2-factor
+                                    authentication?
+                                </Link>
+                                <br />
+                                <Link href="#">
+                                    Privacy Policy
+                                </Link>
                             </div>
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </div>
         </>
     );
 }
-
-const mapStateToProps = (state) => ({
-    earningHistory: state?.EarningHistory?.expenses,
-    totalSales: state?.TotalSales?.statistics,
-});
-export default connect(mapStateToProps, {})(Home);
+export default Signin;

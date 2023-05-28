@@ -7,7 +7,7 @@ function Sidebar() {
         {
             icon: "ri-grid-fill",
             name: "Dashboard",
-            path: "",
+            path: "dashboard",
         },
         {
             icon: "ri-stack-fill",
@@ -45,11 +45,11 @@ function Sidebar() {
         <>
             <div className="sidebar">
                 <div className="brand-logo text-center">
-                    {/* <Link href="/">
+                    {/* <Link href="/dashboard">
                             <img src="./images/logoi.png" alt="" width="50" />
                         
                     </Link> */}
-                    <Link href="/">
+                    <Link href="/dashboard">
                             <img src="./images/logoi.png" alt="" width="30" />
                     </Link>
                 </div>

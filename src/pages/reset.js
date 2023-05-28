@@ -7,7 +7,7 @@ function Reset() {
           <div className="row justify-content-center h-100 align-items-center">
             <div className="col-xl-4 col-md-5">
               <div className="mini-logo text-center my-12">
-                <Link href="/">
+                <Link href="/dashboard">
 
                   <img src="./images/logo.png" alt="" />
 

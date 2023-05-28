@@ -12,7 +12,7 @@ function Header() {
                             <div className="header-content">
                                 <div className="header-left">
                                     <div className="brand-logo">
-                                        <Link href="/">
+                                        <Link href="/dashboard">
                                                 <img
                                                     src="./images/logoi.png"
                                                     alt=""

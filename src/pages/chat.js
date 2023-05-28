@@ -4,8 +4,7 @@ import ChatApp from "./../components/chat/ChatApp";
 function MessageChat() {
     return (
         <>
-            
-                                <ChatApp />
+            <ChatApp />
         </>
     );
 }

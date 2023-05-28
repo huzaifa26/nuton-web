@@ -12,7 +12,7 @@ const StepTwo = (props) => {
     const handleSubmit = (values) => {
         props.next(values, true);
         alert("SUCCESS!! :-)\n\n" + JSON.stringify(values, null, 4));
-        router.push("/");
+        router.push("/dashboard");
     };
 
     return (

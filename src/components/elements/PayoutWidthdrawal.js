@@ -33,7 +33,7 @@ function PayoutWidthdraw() {
                             <h5 className="mb-5">USD {item.amount}</h5>
                             <p className="mb-0">June 9, 2021 09:55 PM </p>
                         </div>
-                        <Link href="/">
+                        <Link href="/dashboard">
                            View Details
                         </Link>
 
