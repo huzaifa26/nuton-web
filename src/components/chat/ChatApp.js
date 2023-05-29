@@ -1,12 +1,13 @@
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
-// import "./styles.css";
 import ChatIntro from "./../elements/chatIntro";
 import Message from "./Message/Message";
 import User from "./User/User";
 import usersData from "./users.json";
+import Sidebar from "../layout/sidebar";
 
+import Header from "../layout/Header";
 function ChatApp() {
     const [userActive, setUserActive] = useState([]);
     const messagesEndRef = useRef(null);
@@ -32,8 +33,11 @@ function ChatApp() {
     };
 
     return (
+
         <div className="chat__box">
+                <Sidebar/>
         <div className="container">
+        
             <div className="row">
                 <div className="col-xl-3">
                     <div className="card mb-0" style={{height:"100vh"}}>
@@ -52,7 +56,7 @@ function ChatApp() {
                                             All Messages
                                         </NavLink>
                                     </NavItem>
-                                    <NavItem>
+                                    {/* <NavItem>
                                         <NavLink
                                             className={{
                                                 active: activeTab === "2",
@@ -63,7 +67,7 @@ function ChatApp() {
                                         >
                                             Groups
                                         </NavLink>
-                                    </NavItem>
+                                    </NavItem> */}
                                 </Nav>
                                 <TabContent activeTab={activeTab}>
                                     <TabPane tabId="1">
@@ -73,10 +77,11 @@ function ChatApp() {
                                             userActive={userActive}
                                         />
                                     </TabPane>
-                                    <TabPane tabId="2">
+                                    {/* <TabPane tabId="2">
                                         <Link href="/create-group">
+                                            <a className="btn btn-primary my-12 w-100">
                                                 Create Group
-                                            
+                                            </a>
                                         </Link>
 
                                         <div className="card">
@@ -88,8 +93,9 @@ function ChatApp() {
                                                     additional content.
                                                 </p>
                                                 <Link href="/#">
+                                                    <a className="btn btn-success w-100">
                                                         Join with us
-                                                    
+                                                    </a>
                                                 </Link>
                                             </div>
                                         </div>
@@ -103,12 +109,13 @@ function ChatApp() {
                                                     additional content.
                                                 </p>
                                                 <Link href="/#">
+                                                    <a className="btn btn-dark w-100">
                                                         Join with us
-                                                    
+                                                    </a>
                                                 </Link>
                                             </div>
                                         </div>
-                                    </TabPane>
+                                    </TabPane> */}
                                 </TabContent>
                             </div>
                         </div>
