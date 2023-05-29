@@ -5,9 +5,10 @@ import TotalSales from "../components/chart/TotalSales";
 import StudentQueries from "../components/elements/StudentQueries";
 import TrafficAnalytics from "../components/elements/TrafficAnalytics";
 import Layout from "../components/layout/Layout";
-import BalanceState from "../components/widget/BalanceState";
 import RecentNotification from "./../components/elements/RecentNotification";
 import StatsWidget from "./../components/widget/StatsWidget";
+import LeaderBoardList from "./../components/elements/LeaderBoardList";
+
 const DataMap = dynamic(() => import("../components/elements/DataMap"), {
     ssr: false,
 });
@@ -18,7 +19,7 @@ function Home({ earningHistory, totalSales }) {
             <Layout
                 headTitle="Dashboard"
                 pageTitle="Dashboard"
-                pageTitleSub={"Welcome to Edunet Dashboard"}
+                pageTitleSub={"Welcome to Egeria Dashboard"}
                 pageClass={"dashboard"}
                 parent={"Home"}
                 child={"Dashboard"}
@@ -34,7 +35,7 @@ function Home({ earningHistory, totalSales }) {
                         >
                             <div className="card-header">
                                 <h4 className="card-title">
-                                    {earningHistory?.name}
+                                    {earningHistory.name}
                                 </h4>
                             </div>
 
@@ -50,7 +51,9 @@ function Home({ earningHistory, totalSales }) {
                                 <h4 className="card-title">
                                     Recent Notification{" "}
                                 </h4>
-                                View All
+                                <a href="#" className="btn btn-primary">
+                                    View All
+                                </a>
                             </div>
                             <div className="card-body">
                                 <div className="recent-notification">
@@ -85,7 +88,7 @@ function Home({ earningHistory, totalSales }) {
                             </div>
                         </div>
                     </div>
-                    <div className="col-lg-6 col-xl-3">
+                    {/* <div className="col-lg-6 col-xl-3">
                         <div className="card">
                             <div className="card-header">
                                 <h4 className="card-title">Balance</h4>
@@ -98,8 +101,8 @@ function Home({ earningHistory, totalSales }) {
                                 <BalanceState />
                             </div>
                         </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-9">
+                    </div> */}
+                    {/* <div className="col-lg-6 col-xl-9">
                         <div className="card">
                             <div className="card-header">
                                 <h4 className="card-title">Student Location</h4>
@@ -108,11 +111,11 @@ function Home({ earningHistory, totalSales }) {
                                 <DataMap />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="col-xl-12">
                         <div className="card transparent">
                             <div className="card-header">
-                                <h4 className="card-title">Trafic Analytics</h4>
+                                <h4 className="card-title">Leader Board</h4>
                             </div>
                             <div className="card-body">
                                 <div className="rtable rtable--5cols rtable--collapse">
@@ -133,7 +136,7 @@ function Home({ earningHistory, totalSales }) {
                                             <strong>Trend</strong>
                                         </div>
                                     </div>
-                                    <TrafficAnalytics />
+                                    <LeaderBoardList />
                                 </div>
                             </div>
                         </div>
@@ -144,8 +147,11 @@ function Home({ earningHistory, totalSales }) {
     );
 }
 
-const mapStateToProps = (state) => ({
-    earningHistory: state?.EarningHistory?.expenses,
-    totalSales: state?.TotalSales?.statistics,
-});
+const mapStateToProps = (state) => {
+    return ({
+        earningHistory: state.earningHistory.expenses,
+        totalSales: state.totalSales.statistics,
+    })
+};
+
 export default connect(mapStateToProps, {})(Home);

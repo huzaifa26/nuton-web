@@ -27,11 +27,9 @@ function Signin() {
                 router.push('/otp1');
                 return
             }
-
-            router.push('/');
+            router.push('/dashboard');
         } catch (e) {
-            ToastAndroid.show(e.message, ToastAndroid.SHORT);
-            throw new Error(e.message);
+            console.log(e);
         }
     }
 

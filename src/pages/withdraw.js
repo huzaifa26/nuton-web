@@ -136,6 +136,6 @@ function Balance({ myBalance }) {
     );
 }
 const mapStateToProps = (state) => ({
-    myBalance: state.MyBalance.expenses,
+    myBalance: state.myBalance.expenses,
 });
 export default connect(mapStateToProps, {})(Balance);

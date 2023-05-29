@@ -64,6 +64,6 @@ function Wallet({ profileVisit }) {
 }
 
 const mapStateToProps = (state) => ({
-    profileVisit: state.EarningHistory.expenses,
+    profileVisit: state.earningHistory.expenses,
 });
 export default connect(mapStateToProps, {})(Wallet);

@@ -38,21 +38,21 @@ function MessageChat() {
                                         />
                                     </div>
                                     <div className="message-video-bottom-bar gap-3">
-                                        
-                                            <i className="ri-fullscreen-line"></i>
-                                        
-                                        
-                                            <i className="ri-mic-fill"></i>
-                                        
-                                        
-                                            <i className="ri-vidicon-fill active"></i>
-                                        
-                                        
-                                            <i className="ri-phone-fill"></i>
-                                        
-                                        
-                                            <i className="ri-computer-fill"></i>
-                                        
+
+                                        <i className="ri-fullscreen-line"></i>
+
+
+                                        <i className="ri-mic-fill"></i>
+
+
+                                        <i className="ri-vidicon-fill active"></i>
+
+
+                                        <i className="ri-phone-fill"></i>
+
+
+                                        <i className="ri-computer-fill"></i>
+
                                     </div>
                                 </div>
                             </div>
@@ -170,12 +170,8 @@ function MessageChat() {
                                     </div>
                                     <hr />
                                     <div className="position-absolute bottom-0 d-flex align-items-center gap-3">
-                                        >
-                                            <i className="ri-attachment-2 fs-4"></i>
-                                        
-                                        >
-                                            <i className="ri-mic-line fs-4"></i>
-                                        
+                                        <i className="ri-attachment-2 fs-4"></i>
+                                        <i className="ri-mic-line fs-4"></i>
                                         <input
                                             type="text"
                                             className="form-control"
