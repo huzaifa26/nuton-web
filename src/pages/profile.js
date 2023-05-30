@@ -2,7 +2,12 @@ import Link from "next/link";
 import Layout from "../components/layout/Layout";
 import ProfileWidget from './../components/elements/ProfileWidget';
 import TopPerfomingWidget from "./../components/elements/TopPerformingWidget";
+import { useSelector } from "react-redux";
+
 function Profile() {
+
+	const user = useSelector((state) => state.user.user);
+
 	return (
 		<>
 			<Layout
@@ -99,66 +104,28 @@ function Profile() {
 									</div>
 									<div className="card-body">
 										<form className="row">
-											<div className="col-lg-6 col-md-6">
+											<div className="col-lg-12 col-md-6">
 												<div className="user-info">
-													<span>USER ID</span>
-													<h5>818778</h5>
+													<span>Name</span>
+													<h5>{user?.name}</h5>
 												</div>
 											</div>
-											<div className="col-lg-6 col-md-6">
+											<div className="col-lg-12 col-md-6">
 												<div className="user-info">
-													<span>USER NAME</span>
-													<h5>faiyaz_abdullah</h5>
+													<span>Email</span>
+													<h5>{user?.email}</h5>
 												</div>
 											</div>
-											<div className="col-lg-6 col-md-6">
+											<div className="col-lg-12 col-md-6">
 												<div className="user-info">
-													<span>EMAIL ADDRESS</span>
-													<h5>email@example.com</h5>
+													<span>Phone</span>
+													<h5>{user?.phone}</h5>
 												</div>
 											</div>
-											<div className="col-lg-6 col-md-6">
+											<div className="col-lg-12 col-md-6">
 												<div className="user-info">
-													<span>ADDRESS</span>
-													<h5>125 Govt College Street, Monohorpur</h5>
-												</div>
-											</div>
-											<div className="col-lg-6 col-md-6">
-												<div className="user-info">
-													<span>POST CODE</span>
-													<h5>3583</h5>
-												</div>
-											</div>
-											<div className="col-lg-6 col-md-6">
-												<div className="user-info">
-													<span>CITY</span>
-													<h5>Cumilla</h5>
-												</div>
-											</div>
-											<div className="col-lg-6 col-md-6">
-												<div className="user-info">
-													<span>
-														COUNTRY OF RESIDENCE
-													</span>
-													<h5>Bangladesh</h5>
-												</div>
-											</div>
-											<div className="col-lg-6 col-md-6">
-												<div className="user-info">
-													<span>JOINED SINCE</span>
-													<h5>20/10/2020</h5>
-												</div>
-											</div>
-											<div className="col-lg-6 col-md-6">
-												<div className="user-info">
-													<span>WEB SITE</span>
-													<h5>http://codeefly.com</h5>
-												</div>
-											</div>
-											<div className="col-lg-6 col-md-6">
-												<div className="user-info">
-													<span>TYPE</span>
-													<h5>Personal</h5>
+													<span>Location</span>
+													<h5>{user?.location}</h5>
 												</div>
 											</div>
 										</form>

@@ -1,10 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
-const initialValues = {
-    email: "",
-    password: "",
-};
 
 const UpdateInfoSchema = Yup.object().shape({
     email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -14,6 +11,12 @@ const UpdateInfoSchema = Yup.object().shape({
 });
 
 function UpdateInfo() {
+
+    const user = useSelector((state) => state.user.user);
+    const initialValues = {
+        email: user?.email,
+        password: "",
+    };
     return (
         <>
             <Formik
@@ -28,11 +31,16 @@ function UpdateInfo() {
                 {({ errors, status, touched }) => (
                     <Form>
                         <div className="row">
-                            <div className="col-12 mb-16">
+                            <div className="col-10 mb-16">
                                 <label className="form-label">Email</label>
                                 <Field
                                     name="email"
                                     type="text"
+                                    disabled={true}
+                                    style={{
+                                        opacity:0.6,
+                                        cursor:"not-allowed"
+                                    }}
                                     className={
                                         "form-control" +
                                         (errors.email && touched.email
@@ -46,7 +54,7 @@ function UpdateInfo() {
                                     className="invalid-feedback"
                                 />
                             </div>
-                            <div className="col-12 mb-16">
+                            <div className="col-10 mb-16">
                                 <label className="form-label">Password</label>
                                 <Field
                                     name="password"

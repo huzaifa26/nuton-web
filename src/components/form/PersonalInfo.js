@@ -1,14 +1,9 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import SetReduxState from "../SetReduxState";
 
-const initialValues = {
-    fullName: "",
-    email: "",
-    address: "",
-    city: "",
-    country: "",
-    postal: "",
-};
+;
 
 const PersonalInfoSchema = Yup.object().shape({
     fullName: Yup.string().required("Full is required"),
@@ -20,8 +15,16 @@ const PersonalInfoSchema = Yup.object().shape({
 });
 
 function PersonalInfo() {
+    const user=useSelector((state)=> state.user.user);
+
+    const initialValues = {
+        name: user?.name,
+        email: user?.email,
+        phone: user?.phone,
+        location: user?.location,
+    }
     return (
-        <>
+        <SetReduxState>
             <Formik
                 initialValues={initialValues}
                 validationSchema={PersonalInfoSchema}
@@ -34,10 +37,10 @@ function PersonalInfo() {
                 {({ errors, status, touched }) => (
                     <Form>
                         <div className="row">
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-16">
-                                <label className="form-label">Full Name</label>
+                            <div className="col-xxl-10 col-xl-6 col-lg-6 mb-16">
+                                <label className="form-label">Name</label>
                                 <Field
-                                    name="fullName"
+                                    name="name"
                                     type="text"
                                     className={
                                         "form-control" +
@@ -47,20 +50,19 @@ function PersonalInfo() {
                                     }
                                 />
                                 <ErrorMessage
-                                    name="fullName"
+                                    name="name"
                                     component="div"
                                     className="invalid-feedback"
                                 />
                             </div>
-
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-16">
+                            <div className="col-xxl-10 col-xl-6 col-lg-6 mb-16">
                                 <label className="form-label">Email</label>
                                 <Field
                                     name="email"
                                     type="text"
                                     className={
                                         "form-control" +
-                                        (errors.email && touched.email
+                                        (errors.fullName && touched.fullName
                                             ? " is-invalid"
                                             : "")
                                     }
@@ -71,88 +73,38 @@ function PersonalInfo() {
                                     className="invalid-feedback"
                                 />
                             </div>
-
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-16">
-                                <label className="form-label">Address</label>
+                            <div className="col-xxl-10 col-xl-6 col-lg-6 mb-16">
+                                <label className="form-label">Phone</label>
                                 <Field
-                                    name="address"
+                                    name="phone"
                                     type="text"
                                     className={
                                         "form-control" +
-                                        (errors.address && touched.address
+                                        (errors.fullName && touched.fullName
                                             ? " is-invalid"
                                             : "")
                                     }
                                 />
                                 <ErrorMessage
-                                    name="address"
+                                    name="phone"
                                     component="div"
                                     className="invalid-feedback"
                                 />
                             </div>
-
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-16">
-                                <label className="form-label">City</label>
+                            <div className="col-xxl-10 col-xl-6 col-lg-6 mb-16">
+                                <label className="form-label">Location</label>
                                 <Field
-                                    name="city"
+                                    name="location"
                                     type="text"
                                     className={
                                         "form-control" +
-                                        (errors.city && touched.city
+                                        (errors.fullName && touched.fullName
                                             ? " is-invalid"
                                             : "")
                                     }
                                 />
                                 <ErrorMessage
-                                    name="city"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-16">
-                                <label className="form-label">Post Code</label>
-                                <Field
-                                    name="postal"
-                                    type="text"
-                                    className={
-                                        "form-control" +
-                                        (errors.postal && touched.postal
-                                            ? " is-invalid"
-                                            : "")
-                                    }
-                                />
-                                <ErrorMessage
-                                    name="postal"
-                                    component="div"
-                                    className="invalid-feedback"
-                                />
-                            </div>
-
-                            <div className="col-xxl-6 col-xl-6 col-lg-6 mb-16">
-                                <label className="form-label">Country</label>
-                                <Field
-                                    name="country"
-                                    as="select"
-                                    className={
-                                        "form-control" +
-                                        (errors.country && touched.country
-                                            ? " is-invalid"
-                                            : "")
-                                    }
-                                >
-                                    <option value="Bangladesh">
-                                        Bangladesh
-                                    </option>
-                                    <option value="United States">
-                                        United States
-                                    </option>
-                                    <option value="United Kingdom">
-                                        United Kingdom
-                                    </option>
-                                </Field>
-                                <ErrorMessage
-                                    name="country"
+                                    name="location"
                                     component="div"
                                     className="invalid-feedback"
                                 />
@@ -170,7 +122,7 @@ function PersonalInfo() {
                     </Form>
                 )}
             </Formik>
-        </>
+        </SetReduxState>
     );
 }
 export default PersonalInfo;

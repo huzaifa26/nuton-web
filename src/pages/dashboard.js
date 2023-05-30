@@ -8,6 +8,7 @@ import Layout from "../components/layout/Layout";
 import RecentNotification from "./../components/elements/RecentNotification";
 import StatsWidget from "./../components/widget/StatsWidget";
 import LeaderBoardList from "./../components/elements/LeaderBoardList";
+import SetReduxState from "@/components/SetReduxState";
 
 const DataMap = dynamic(() => import("../components/elements/DataMap"), {
     ssr: false,
@@ -15,7 +16,7 @@ const DataMap = dynamic(() => import("../components/elements/DataMap"), {
 
 function Home({ earningHistory, totalSales }) {
     return (
-        <>
+        <SetReduxState>
             <Layout
                 headTitle="Dashboard"
                 pageTitle="Dashboard"
@@ -143,7 +144,7 @@ function Home({ earningHistory, totalSales }) {
                     </div>
                 </div>
             </Layout>
-        </>
+        </SetReduxState>
     );
 }
 

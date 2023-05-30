@@ -6,8 +6,10 @@ import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth
 import { setUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import { useCookies } from 'react-cookie';
 
 function Signin() {
+    const [cookies, setCookie] = useCookies();
 
     const dispatch=useDispatch();
     const router=useRouter();
@@ -19,6 +21,7 @@ function Signin() {
             const user = await getDoc(userRef);
             const u=user.data();
             dispatch(setUser(u));
+            setCookie('user', u, { path: '/' });
             if(!u.emailVerified){
                 router.push('/verify-email');
                 return
