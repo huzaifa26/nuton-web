@@ -7,23 +7,23 @@ function Sidebar() {
         {
             icon: "ri-grid-fill",
             name: "Dashboard",
-            path: "dashboard",
+            path: "",
         },
         {
             icon: "ri-stack-fill",
             name: "Courses",
             path: "courses",
         },
-        {
-            icon: "ri-wallet-3-fill",
-            name: "Wallet",
-            path: "wallet",
-        },
-        {
-            icon: "ri-hand-coin-fill",
-            name: "Withdraw",
-            path: "withdraw",
-        },
+        // {
+        //     icon: "ri-wallet-3-fill",
+        //     name: "Wallet",
+        //     path: "wallet",
+        // },
+        // {
+        //     icon: "ri-hand-coin-fill",
+        //     name: "Withdraw",
+        //     path: "withdraw",
+        // },
         {
             icon: "ri-message-3-fill",
             name: "Chat",
@@ -45,12 +45,15 @@ function Sidebar() {
         <>
             <div className="sidebar">
                 <div className="brand-logo text-center">
-                    {/* <Link href="/dashboard">
+                    {/* <Link href="/">
+                        <a className="full-logo">
                             <img src="./images/logoi.png" alt="" width="50" />
-                        
+                        </a>
                     </Link> */}
-                    <Link href="/dashboard">
-                            <img src="./images/logoi.png" alt="" width="30" />
+                    <Link href="/">
+                        <a className="mini-logo">
+                            <img src="./images/egeria.png" alt="" width="60"  />
+                        </a>
                     </Link>
                 </div>
                 <div className="menu">
@@ -59,14 +62,14 @@ function Sidebar() {
                             <>
                                 <li className={router.pathname == `/${item.path}` ? "active" : `${item.class}`} key={id}>
                                     <Link href={`/${item.path}`}>
-                                        
+                                        <a>
                                             <span>
                                                 <i className={item.icon}></i>
                                             </span>
                                             <span className="nav-text">
                                                 {item.name}
                                             </span>
-                                        
+                                        </a>
                                     </Link>
                                 </li>
                             </>
