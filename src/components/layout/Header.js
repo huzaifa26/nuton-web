@@ -2,7 +2,10 @@ import Link from "next/link";
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 import DropdownNotification from "./../elements/DropdownNotification";
 import DropdownProfile from "./../elements/DropdownProfile";
+import { useSelector } from "react-redux";
 function Header() {
+    const user=useSelector((state)=> state.user.user)
+    console.log
     return (
         <>
             <div className="header">
@@ -12,9 +15,9 @@ function Header() {
                             <div className="header-content">
                                 <div className="header-left">
                                     <div className="brand-logo">
-                                        <Link href="/dashboard">
+                                        <Link href="/">
                                                 <img
-                                                    src="./images/logoi.png"
+                                                    src={"./images/logoi.png"}
                                                     alt=""
                                                     width="40"
                                                 />
@@ -74,10 +77,8 @@ function Header() {
                                                     href="/notification"
                                                     className="d-block"
                                                 >
-                                                    
                                                         See more
-                                                        <i className="ri-arrow-right-s-line"></i>
-                                                    
+                                                        <i className="ri-arrow-right-s-line"></i>   
                                                 </Link>
                                             </div>
                                         </DropdownMenu>
@@ -94,7 +95,15 @@ function Header() {
                                             <div className="user icon-menu active">
                                                 <span className="thumb">
                                                     <img
-                                                        src="/images/avatar/1.png"
+                                                        style={{
+                                                            objectFit:"fill",
+                                                            height:"100%",
+                                                            width:"100%"
+
+                                                        }}
+                                                        className="rounded-circle"
+                                                        // src="/images/avatar/1.png"
+                                                        src={user?.image || "/images/avatar/1.png"}
                                                         alt=""
                                                         // width="40"
                                                     />

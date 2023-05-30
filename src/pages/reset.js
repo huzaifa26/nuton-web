@@ -1,5 +1,29 @@
+// import { auth } from "@/utils/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { getAuth } from "firebase/auth";
+import { useRouter } from "next/router";
+
 function Reset() {
+  const [email,setEmail]=useState();
+  const auth=getAuth();
+  const router=useRouter()
+
+  const formHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await sendPasswordResetEmail(auth, email);
+      console.log("Password reset email sent successfully");
+      toast.success("Password Change Email sent. Please check your inbox.");
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error sending Password Change Email.");
+    }
+  }
+
   return (
     <>
       <div className="authincation section-padding">
@@ -8,9 +32,7 @@ function Reset() {
             <div className="col-xl-4 col-md-5">
               <div className="mini-logo text-center my-12">
                 <Link href="/dashboard">
-
                   <img src="./images/logo.png" alt="" />
-
                 </Link>
               </div>
               <div className="card">
@@ -20,7 +42,7 @@ function Reset() {
                   </h4>
                 </div>
                 <div className="card-body">
-                  <form className="g-3">
+                  <form onSubmit={formHandler} className="g-3">
                     <label className="form-label">
                       Email
                     </label>
@@ -28,7 +50,8 @@ function Reset() {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="***********"
+                      placeholder="Email"
+                      onChange={(e)=> setEmail(e.target.value)}
                     />
                     <div className="mt-16">
                       <button

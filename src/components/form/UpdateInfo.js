@@ -1,6 +1,9 @@
+import { auth } from "@/utils/firebase";
+import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import SetReduxState from "../SetReduxState";
 
 
 const UpdateInfoSchema = Yup.object().shape({
@@ -8,24 +11,43 @@ const UpdateInfoSchema = Yup.object().shape({
     password: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
+    newPassword: Yup.string()
+        .min(6, "New Password must be at least 6 characters")
+        .required("Password is required"),
 });
 
 function UpdateInfo() {
 
     const user = useSelector((state) => state.user.user);
-    const initialValues = {
+    let initialValues = {
         email: user?.email,
         password: "",
+        newPassword: "",
     };
     return (
-        <>
+        <SetReduxState>
             <Formik
+                enableReinitialize={true}
                 initialValues={initialValues}
                 validationSchema={UpdateInfoSchema}
-                onSubmit={(fields) => {
-                    alert(
-                        "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
-                    );
+                onSubmit={(fields,{ resetForm }) => {
+                    alert(1);
+                    signInWithEmailAndPassword(auth,user?.email,fields?.password)
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+
+                            updatePassword(user, fields.newPassword)
+                            .then(() => {
+                                console.log("Password updated successfully.");
+                                resetForm()
+                            })
+                            .catch((error) => {
+                                console.log(error.code, error.message);
+                            });
+                        })
+                        .catch((error) => {
+                            console.log(error.code, error.message);
+                        });
                 }}
             >
                 {({ errors, status, touched }) => (
@@ -38,8 +60,8 @@ function UpdateInfo() {
                                     type="text"
                                     disabled={true}
                                     style={{
-                                        opacity:0.6,
-                                        cursor:"not-allowed"
+                                        opacity: 0.6,
+                                        cursor: "not-allowed"
                                     }}
                                     className={
                                         "form-control" +
@@ -55,7 +77,7 @@ function UpdateInfo() {
                                 />
                             </div>
                             <div className="col-10 mb-16">
-                                <label className="form-label">Password</label>
+                                <label className="form-label">Current Password</label>
                                 <Field
                                     name="password"
                                     type="text"
@@ -68,6 +90,24 @@ function UpdateInfo() {
                                 />
                                 <ErrorMessage
                                     name="password"
+                                    component="div"
+                                    className="invalid-feedback"
+                                />
+                            </div>
+                            <div className="col-10 mb-16">
+                                <label className="form-label">New Password</label>
+                                <Field
+                                    name="newPassword"
+                                    type="text"
+                                    className={
+                                        "form-control" +
+                                        (errors.password && touched.password
+                                            ? " is-invalid"
+                                            : "")
+                                    }
+                                />
+                                <ErrorMessage
+                                    name="newPassword"
                                     component="div"
                                     className="invalid-feedback"
                                 />
@@ -85,7 +125,7 @@ function UpdateInfo() {
                     </Form>
                 )}
             </Formik>
-        </>
+        </SetReduxState>
     );
 }
 export default UpdateInfo;

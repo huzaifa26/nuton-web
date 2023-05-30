@@ -1,24 +1,32 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import SetReduxState from "../SetReduxState";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "@/utils/firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { setUser } from "@/redux/reducers/userSlice";
+import { useCookies } from "react-cookie";
 
 
 
 const UpdateAvatarSchema = Yup.object().shape({
     fullName: Yup.string().required("Full Name is required"),
-    photo: Yup.string().required("Photo required"),
+    // photo: Yup.string().required("Photo required"),
 });
 
 function UpdateAvatar() {
-
+    const [cookies, setCookie] = useCookies();
+    const dispatch=useDispatch()
     const user = useSelector((state) => state.user.user);
-
+    
     const initialValues = {
         fullName: user?.name,
         photo: user?.image,
     }
+
+    const [image, setImage] = useState(null);
 
     return (
         <SetReduxState>
@@ -26,10 +34,29 @@ function UpdateAvatar() {
                 initialValues={initialValues}
                 enableReinitialize={true}
                 validationSchema={UpdateAvatarSchema}
-                onSubmit={(fields) => {
-                    alert(
-                        "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
-                    );
+                onSubmit={async (fields) => {
+                    let data = {
+                        name: fields.fullName
+                    }
+                    if (image) {
+                        const file = image;
+                        const filename = user?.name + file?.name;
+
+                        const storageRef = ref(storage, filename);
+                        await uploadBytes(storageRef, file);
+
+                        const downloadURL = await getDownloadURL(storageRef);
+                        data.image = downloadURL
+                    }
+
+                    const docRef = doc(db, 'users', user?.uid);
+                    await updateDoc(docRef, {
+                        name: data.name,
+                        image:data.image
+                    });
+
+                    dispatch(setUser({...user,name:data.name,image:data.image}))
+                    setCookie('user', {...user,name:data.name,image:data.image}, { path: '/' });
                 }}
             >
                 {({ errors, status, touched }) => (
@@ -57,7 +84,8 @@ function UpdateAvatar() {
                                 <div className="d-flex align-items-center mb-16">
                                     <img
                                         className="rounded-circle me-0 me-sm-3"
-                                        src="images/avatar/1.png"
+                                        // src={"images/avatar/1.png"}
+                                        src={image ? URL.createObjectURL(image) : user?.image ? user?.image : "images/avatar/1.png"}
                                         width="55"
                                         height="55"
                                         alt=""
@@ -71,15 +99,20 @@ function UpdateAvatar() {
                                 </div>
                             </div>
                             <div className="col-12">
-                                <Field
+                                <input
+                                    accept="image/*"
                                     name="photo"
                                     type="file"
                                     className={
-
                                         (errors.photo && touched.photo
                                             ? " is-invalid"
                                             : "")
                                     }
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        console.log(file);
+                                        setImage(file);
+                                    }}
                                 />
                                 <ErrorMessage
                                     name="photo"

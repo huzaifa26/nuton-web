@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { useCookies } from 'react-cookie';
+
+
 
 const initialState = {
 
@@ -9,6 +12,9 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
+            ()=>{
+
+            }
             state.user = action.payload;
         },
     },

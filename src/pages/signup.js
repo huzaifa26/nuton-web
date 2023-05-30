@@ -9,8 +9,8 @@ import { setUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 
 function Signin() {
-  const router=useRouter();
-  const dispatch=useDispatch()
+  const router = useRouter();
+  const dispatch = useDispatch()
 
   const sendVerificationEmail = async () => {
     try {
@@ -28,13 +28,17 @@ function Signin() {
       password: data.password,
       phoneVerified: false,
       emailVerified: false,
-      signinFrom:"web"
-  }
+      signinFrom: "web"
+    }
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (userCredentials) => {
         delete d.password;
-        d.uid = userCredentials.user.uid
-        await setDoc(doc(db, "users", userCredentials.user.uid), d);
+        d.uid = userCredentials.user.uid;
+        console.log(userCredentials.user.uid);
+        const dRef=doc(db, "users", userCredentials.user.uid)
+
+        await setDoc(dRef, d);
+
         const result = await signInWithEmailAndPassword(auth, data.email, data.password);
         const userRef = doc(db, "users", result.user.uid);
         const user = await getDoc(userRef);

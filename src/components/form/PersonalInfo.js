@@ -1,23 +1,26 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import SetReduxState from "../SetReduxState";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/utils/firebase";
+import { setUser } from "@/redux/reducers/userSlice";
+import { useCookies } from "react-cookie";
 
 ;
 
 const PersonalInfoSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full is required"),
-    email: Yup.string().email("Email is invalid").required("Email is required"),
-    address: Yup.string().required("Present Address is required"),
-    city: Yup.string().required("City is required"),
-    postal: Yup.string().required("Post code is required"),
-    country: Yup.string().required("country is required"),
+    name: Yup.string().required("Name is required"),
+    location: Yup.string().required("Location is required"),
 });
 
 function PersonalInfo() {
-    const user=useSelector((state)=> state.user.user);
+    const user = useSelector((state) => state.user.user);
+    const [cookies, setCookie] = useCookies();
+    const dispatch=useDispatch();
+    console.log(user);
 
-    const initialValues = {
+    let initialValues = {
         name: user?.name,
         email: user?.email,
         phone: user?.phone,
@@ -26,12 +29,18 @@ function PersonalInfo() {
     return (
         <SetReduxState>
             <Formik
+                enableReinitialize={true}
                 initialValues={initialValues}
                 validationSchema={PersonalInfoSchema}
-                onSubmit={(fields) => {
-                    alert(
-                        "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
-                    );
+                onSubmit={async(fields) => {
+                    const docRef = doc(db, 'users', user?.uid);
+                    await updateDoc(docRef, {
+                        name: fields.name,
+                        location: fields.location
+                    });
+
+                    dispatch(setUser({ ...user, name: fields.name, location: fields.location }))
+                    setCookie('user', { ...user, name: fields.name, location: fields.location }, { path: '/' });
                 }}
             >
                 {({ errors, status, touched }) => (
