@@ -77,45 +77,6 @@ function ChatApp() {
                                             userActive={userActive}
                                         />
                                     </TabPane>
-                                    {/* <TabPane tabId="2">
-                                        <Link href="/create-group">
-                                            <a className="btn btn-primary my-12 w-100">
-                                                Create Group
-                                            </a>
-                                        </Link>
-
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5>Envato Group</h5>
-                                                <p>
-                                                    With supporting text below
-                                                    as a natural lead-in to
-                                                    additional content.
-                                                </p>
-                                                <Link href="/#">
-                                                    <a className="btn btn-success w-100">
-                                                        Join with us
-                                                    </a>
-                                                </Link>
-                                            </div>
-                                        </div>
-
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5>Code Canyon Group</h5>
-                                                <p>
-                                                    With supporting text below
-                                                    as a natural lead-in to
-                                                    additional content.
-                                                </p>
-                                                <Link href="/#">
-                                                    <a className="btn btn-dark w-100">
-                                                        Join with us
-                                                    </a>
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </TabPane> */}
                                 </TabContent>
                             </div>
                         </div>

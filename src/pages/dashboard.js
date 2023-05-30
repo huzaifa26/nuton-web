@@ -9,6 +9,7 @@ import RecentNotification from "./../components/elements/RecentNotification";
 import StatsWidget from "./../components/widget/StatsWidget";
 import LeaderBoardList from "./../components/elements/LeaderBoardList";
 import SetReduxState from "@/components/SetReduxState";
+import Link from "next/link";
 
 const DataMap = dynamic(() => import("../components/elements/DataMap"), {
     ssr: false,
@@ -52,9 +53,9 @@ function Home({ earningHistory, totalSales }) {
                                 <h4 className="card-title">
                                     Recent Notification{" "}
                                 </h4>
-                                <a href="#" className="btn btn-primary">
+                                <Link href="#" className="btn btn-primary">
                                     View All
-                                </a>
+                                </Link>
                             </div>
                             <div className="card-body">
                                 <div className="recent-notification">

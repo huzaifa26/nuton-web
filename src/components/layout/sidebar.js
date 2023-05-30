@@ -50,10 +50,9 @@ function Sidebar() {
                             <img src="./images/logoi.png" alt="" width="50" />
                         </a>
                     </Link> */}
+                    
                     <Link href="/">
-                        <a className="mini-logo">
-                            <img src="./images/egeria.png" alt="" width="60"  />
-                        </a>
+                        <img src="./images/egeria.png" alt="" width="60" />
                     </Link>
                 </div>
                 <div className="menu">
@@ -62,14 +61,12 @@ function Sidebar() {
                             <>
                                 <li className={router.pathname == `/${item.path}` ? "active" : `${item.class}`} key={id}>
                                     <Link href={`/${item.path}`}>
-                                        <a>
-                                            <span>
-                                                <i className={item.icon}></i>
-                                            </span>
-                                            <span className="nav-text">
-                                                {item.name}
-                                            </span>
-                                        </a>
+                                        <span>
+                                            <i className={item.icon}></i>
+                                        </span>
+                                        <span className="nav-text">
+                                            {item.name}
+                                        </span>
                                     </Link>
                                 </li>
                             </>
