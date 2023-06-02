@@ -19,6 +19,7 @@ const SigninFormSchema = Yup.object().shape({
 
 function SigninForm({ getCredentials, loading }) {
 
+
     return (
         <>
             <Formik
@@ -31,7 +32,7 @@ function SigninForm({ getCredentials, loading }) {
                 {({ errors, status, touched }) => (
                     <Form>
                         <div className="row">
-                            <div className="col-10 mb-16">
+                            <div className="col-12 mb-16">
                                 <label className="form-label">Email</label>
                                 <Field
                                     name="email"
@@ -50,7 +51,7 @@ function SigninForm({ getCredentials, loading }) {
                                 />
                             </div>
 
-                            <div className="col-10 mb-16">
+                            <div className="col-12 mb-16">
                                 <label className="form-label">Password</label>
                                 <Field
                                     name="password"

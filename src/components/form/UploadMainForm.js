@@ -1,6 +1,10 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from 'reactstrap'
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { RxCross2 } from "react-icons/rx"
+import { useRouter } from "next/router";
 
 const initialValues = {
   courseThambnail: "",
@@ -12,24 +16,65 @@ const initialValues = {
 };
 
 const PersonalInfoSchema = Yup.object().shape({
-  courseThambnail: Yup.string().required("Upload course thumbnail"),
+  // courseThambnail: Yup.string().required("Upload course thumbnail"),
   courseTitle: Yup.string().required("Course Title is required"),
   courseDesc: Yup.string().required("Course Description is required"),
   courseCategory: Yup.string().required("Course selection is required"),
-  courseTags: Yup.string().required("Course tags are required"),
+  // courseTags: Yup.string().required("Course tags are required"),
   languages: Yup.string().required("Languages are required"),
 });
 
 function UploadCourse() {
+  const router=useRouter()
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.user);
+
+  const [image, setImage] = useState(null)
+  const [tags, setTags] = useState([])
+  const [tag, setTag] = useState()
+
+  const removeTagHandler = (index) => {
+    let arr = [...tags];
+    arr.splice(index, 1);
+    setTags(arr);
+  }
+
   return (
     <>
       <Formik
         initialValues={initialValues}
+        enableReinitialize={true}
         validationSchema={PersonalInfoSchema}
-        onSubmit={(fields) => {
-          alert(
-            "SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4)
-          );
+        onSubmit={async (fields) => {
+
+          let data = {
+            courseThambnail: fields.courseThambnail || null,
+            courseTitle: fields.courseTitle,
+            courseDesc: fields.courseDesc,
+            courseTags: tags,
+            languages: fields.languages,
+          }
+
+          console.log(data);
+          router.push("/uploadcontent")
+          return
+
+          if (image) {
+            const file = image;
+            const filename = user?.name + file?.name;
+
+            const storageRef = ref(storage, filename);
+            await uploadBytes(storageRef, file);
+
+            const downloadURL = await getDownloadURL(storageRef);
+            data.image = downloadURL
+          }
+
+          const docRef = doc(db, 'users', user?.uid);
+          await updateDoc(docRef, {
+            name: data.name,
+            image: data.image
+          });
         }}
       >
         {({ errors, touched }) => (
@@ -75,26 +120,26 @@ function UploadCourse() {
               </div>
             </div>
             <div className="row mb-20">
-  <label className="form-label col-lg-3">Course Description</label>
-  <div className="col-lg-9">
-    <Field
-      name="courseDesc"
-      as="textarea"  // Use textarea instead of input
-      rows="12"  // Set the number of rows
-      className={
-        "form-control col-lg-9" +
-        (errors.courseDesc && touched.courseDesc
-          ? " is-invalid"
-          : "")
-      }
-    />
-    <ErrorMessage
-      name="courseDesc"
-      component="div"
-      className="invalid-feedback"
-    />
-  </div>
-</div>
+              <label className="form-label col-lg-3">Course Description</label>
+              <div className="col-lg-9">
+                <Field
+                  name="courseDesc"
+                  as="textarea"  // Use textarea instead of input
+                  rows="12"  // Set the number of rows
+                  className={
+                    "form-control col-lg-9" +
+                    (errors.courseDesc && touched.courseDesc
+                      ? " is-invalid"
+                      : "")
+                  }
+                />
+                <ErrorMessage
+                  name="courseDesc"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
+            </div>
 
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Category</label>
@@ -123,17 +168,38 @@ function UploadCourse() {
             </div>
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Tags</label>
-              <div className="col-lg-9">
-                <Field
-                  name="courseTags"
-                  type="text"
-                  className={
-                    "form-control col-lg-9" +
-                    (errors.courseTags && touched.courseTags
-                      ? " is-invalid"
-                      : "")
-                  }
-                />
+              <div style={{ display: 'flex', flexDirection: "column" }} className="col-lg-9">
+                <div className="col-lg-9 form-control flex bg-[aqua]">
+                  <div className="flex gap-[0.521vw]">
+                    {tags?.map((tag,index) => {
+                      return (
+                        <div className="flex gap-[0.521vw] justify-center">
+                          <p>{tag}</p>
+                          <RxCross2 onClick={()=> removeTagHandler(index)} className="mt-[3px] hover:bg-[rgba(0,0,0,0.15)] rounded-full"/>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <input
+                    name="courseTags"
+                    type="text"
+                    className={
+                      "flex-1 h-full bg-[red]" +
+                      (errors.courseTags && touched.courseTags
+                        ? " is-invalid"
+                        : "")
+                    }
+                    value={tag}
+                    onChange={(e) => { setTag(e.target.value) }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault(); setTags((prev) => {
+                          return [...prev, tag]
+                        }); setTag('')
+                      }
+                    }}
+                  />
+                </div>
                 <ErrorMessage
                   name="courseTags"
                   component="div"
@@ -142,31 +208,31 @@ function UploadCourse() {
               </div>
             </div>
             <div className="row mb-20">
-  <label className="form-label col-lg-3">Languages</label>
-  <div className="col-lg-9">
-    <Field
-      name="languages"
-      as="select"  // Use select element for dropdown
-      className={
-        "form-control col-lg-9" +
-        (errors.languages && touched.languages
-          ? " is-invalid"
-          : "")
-      }
-    >
-      <option value="">Select a language</option>
-      <option value="English">English</option>
-      <option value="Spanish">Spanish</option>
-      <option value="French">French</option>
-      {/* Add more language options as needed */}
-    </Field>
-    <ErrorMessage
-      name="languages"
-      component="div"
-      className="invalid-feedback"
-    />
-  </div>
-</div>
+              <label className="form-label col-lg-3">Languages</label>
+              <div className="col-lg-9">
+                <Field
+                  name="languages"
+                  as="select"  // Use select element for dropdown
+                  className={
+                    "form-control col-lg-9" +
+                    (errors.languages && touched.languages
+                      ? " is-invalid"
+                      : "")
+                  }
+                >
+                  <option value="">Select a language</option>
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  {/* Add more language options as needed */}
+                </Field>
+                <ErrorMessage
+                  name="languages"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
+            </div>
             <div className="row mt-16">
               <div className="col-lg-3"></div>
               <div className="col-lg-9">

@@ -1,4 +1,4 @@
-import SetReduxState from "@/components/SetReduxState";
+import useReduxState from "@/components/useReduxState";
 import UpdateInfo from "../components/form/UpdateInfo";
 import Layout from "../components/layout/Layout";
 import PersonalInfo from "./../components/form/PersonalInfo";
@@ -7,7 +7,7 @@ import SettingsMenu from "./../components/layout/SettingsMenu";
 
 function SettingsProfile() {
     return (
-        <SetReduxState>
+        <useReduxState>
             <Layout
                 headTitle="Profile"
                 pageTitle="Profile"
@@ -62,7 +62,7 @@ function SettingsProfile() {
                     </div>
                 </div>
             </Layout>
-        </SetReduxState>
+        </useReduxState>
     );
 }
 export default SettingsProfile;

@@ -2,14 +2,12 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import SetReduxState from "../SetReduxState";
+import useReduxState from "../useReduxState";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/utils/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { setUser } from "@/redux/reducers/userSlice";
 import { useCookies } from "react-cookie";
-
-
 
 const UpdateAvatarSchema = Yup.object().shape({
     fullName: Yup.string().required("Full Name is required"),
@@ -29,7 +27,7 @@ function UpdateAvatar() {
     const [image, setImage] = useState(null);
 
     return (
-        <SetReduxState>
+        <useReduxState>
             <Formik
                 initialValues={initialValues}
                 enableReinitialize={true}
@@ -133,7 +131,7 @@ function UpdateAvatar() {
                     </Form>
                 )}
             </Formik>
-        </SetReduxState>
+        </useReduxState>
     );
 }
 export default UpdateAvatar;

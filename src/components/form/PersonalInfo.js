@@ -1,7 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import SetReduxState from "../SetReduxState";
+import useReduxState from "../useReduxState";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { setUser } from "@/redux/reducers/userSlice";
@@ -27,7 +27,7 @@ function PersonalInfo() {
         location: user?.location,
     }
     return (
-        <SetReduxState>
+        <useReduxState>
             <Formik
                 enableReinitialize={true}
                 initialValues={initialValues}
@@ -131,7 +131,7 @@ function PersonalInfo() {
                     </Form>
                 )}
             </Formik>
-        </SetReduxState>
+        </useReduxState>
     );
 }
 export default PersonalInfo;

@@ -32,7 +32,7 @@ function Sidebar() {
         {
             icon: "ri-upload-cloud-2-fill",
             name: "Upload",
-            path: "upload",
+            path: "uploadmain",
         },
         {
             icon: "ri-empathize-fill",
@@ -50,7 +50,6 @@ function Sidebar() {
                             <img src="./images/logoi.png" alt="" width="50" />
                         </a>
                     </Link> */}
-                    
                     <Link href="/">
                         <img src="./images/egeria.png" alt="" width="60" />
                     </Link>
