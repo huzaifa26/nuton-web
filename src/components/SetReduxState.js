@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 import { useCookies } from 'react-cookie';
 import { setUser } from "@/redux/reducers/userSlice";
 
-export default function useReduxState({ children }) {
+export default function SetReduxState({ children }) {
   const dispatch=useDispatch();
   const [cookies] = useCookies(['user']);
 

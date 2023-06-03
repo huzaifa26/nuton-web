@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx"
 import { useRouter } from "next/router";
+import { query } from "firebase/firestore";
 
 const initialValues = {
   courseThambnail: "",
@@ -33,6 +34,8 @@ function UploadCourse() {
   const [tags, setTags] = useState([])
   const [tag, setTag] = useState()
 
+  console.log(image);
+
   const removeTagHandler = (index) => {
     let arr = [...tags];
     arr.splice(index, 1);
@@ -48,15 +51,14 @@ function UploadCourse() {
         onSubmit={async (fields) => {
 
           let data = {
-            courseThambnail: fields.courseThambnail || null,
+            courseThambnail: image || fields.courseThambnail || null,
             courseTitle: fields.courseTitle,
             courseDesc: fields.courseDesc,
             courseTags: tags,
             languages: fields.languages,
           }
 
-          console.log(data);
-          router.push("/uploadcontent")
+          router.push({pathname:"/uploadlessons",query:{data: JSON.stringify(data)}})
           return
 
           if (image) {
@@ -82,7 +84,7 @@ function UploadCourse() {
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
-                <Field
+                <input
                   name="courseThambnail"
                   type="file"
                   className={
@@ -91,6 +93,7 @@ function UploadCourse() {
                       ? " is-invalid"
                       : "")
                   }
+                  onChange={(e)=> setImage(e.target.files[0])}
                 />
                 <ErrorMessage
                   name="courseThambnail"

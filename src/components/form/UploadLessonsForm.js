@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Formik, Field, ErrorMessage, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "reactstrap";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 
 const initialValues = {
@@ -16,8 +18,10 @@ const SectionSchema = Yup.object().shape({
   ),
 });
 
-const UploadLessonsForm = () => {
-  const [sections, setSections] = useState(initialValues.sections);
+const UploadLessonsForm = ({ courseInfo }) => {
+  const router = useRouter();
+  const user = useSelector((state) => state.user.user);
+  const [sections, setSections] = useState(courseInfo.sections || initialValues.sections);
 
   const handleAddSection = () => {
     const nextSectionNumber = sections.length + 1;
@@ -48,46 +52,61 @@ const UploadLessonsForm = () => {
     });
   };
 
+  const handleCourseContent = (index) => {
+    let course = courseInfo;
+    course['sections'] = sections;
+    console.log(course);
+    // router.push({ pathname: "/uploadcontent", query: { ...course, index } })
+    router.push({ pathname: "/uploadcontent", query: { data: JSON.stringify({ ...course, index }) } })
+  }
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={SectionSchema}
       onSubmit={(values) => {
-        alert("SUCCESS!! :-)\n\n" + JSON.stringify(values, null, 4));
+        let data = { 
+          uid: user.uid,
+          ...courseInfo 
+        }
+        console.log(data);
+        // router.push({ pathname: "/uploadcontent", query: { course: course, index: index } })
       }}
     >
       {({ errors, touched }) => (
         <Form>
           {sections.map((section, index) => (
             <div key={index} className="section">
-                <Field
-                  name={`sections[${index}].name`}
-                  type="text"
-                  className={
-                    "form-control" +
-                    (errors.sections?.[index]?.name &&
+              <Field
+                name={`sections[${index}].name`}
+                type="text"
+                className={
+                  "form-control" +
+                  (errors.sections?.[index]?.name &&
                     touched.sections?.[index]?.name
-                      ? " is-invalid"
-                      : "")
-                  }
-                  placeholder={`Lesson ${index + 1}`}
-                  value={section.name}
-                  onChange={(event) => handleSectionNameChange(event, index)}
-                />
-                <button
-                    type="button"
-                    className="btn btn-link"
-                    onClick={() => handleSectionNameChange(index)}
-                >
-                    ✏️
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-link"
-                    onClick={() => handleRemoveSection(index)}
-                >
-                    🗑️
-                </button>
+                    ? " is-invalid"
+                    : "")
+                }
+                placeholder={`Lesson ${index + 1}`}
+                value={section.name}
+                onChange={(event) => handleSectionNameChange(event, index)}
+              />
+              <button
+                type="button"
+                className="btn btn-link"
+                value={section.name}
+                // onClick={(event) => handleSectionNameChange(event,index)}
+                onClick={(event) => handleCourseContent(index)}
+              >
+                ✏️
+              </button>
+              <button
+                type="button"
+                className="btn btn-link"
+                onClick={() => handleRemoveSection(index)}
+              >
+                🗑️
+              </button>
 
               <ErrorMessage
                 name={`sections[${index}].name`}

@@ -15,7 +15,6 @@ function Signin() {
   const sendVerificationEmail = async () => {
     try {
       const result = await sendEmailVerification(auth.currentUser);
-      console.log("email sent");
     } catch (error) {
       console.log(error);
     }

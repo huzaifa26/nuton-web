@@ -5,7 +5,6 @@ import DropdownProfile from "./../elements/DropdownProfile";
 import { useSelector } from "react-redux";
 function Header() {
     const user=useSelector((state)=> state.user.user)
-    console.log
     return (
         <>
             <div className="header">

@@ -10,7 +10,6 @@ const middleware = (request: NextRequest) => {
   if (request.cookies.get("user")?.value) {
     isAuthenticated = true
   }
-  console.log("Authenicated: ",isAuthenticated);
   if (!isAuthenticated) {
     return NextResponse.redirect(new URL('/', request.url));
   }

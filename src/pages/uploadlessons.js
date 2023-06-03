@@ -3,35 +3,43 @@ import "react-circular-progressbar/dist/styles.css";
 import UploadCourse from "../components/form/UploadCourse";
 import Layout from "../components/layout/Layout";
 import UploadLessonsForm from "../components/form/UploadLessonsForm";
+import { useRouter } from "next/router";
+import SetReduxState from "@/components/SetReduxState";
 
 const percentage = 66;
 
 const UploadLessons = (props) => {
+
+  const router = useRouter();
+  const query = JSON.parse(router.query.data);
+
   return (
-    <Layout
-      headTitle="Course Structure"
-      pageTitle="Create or Edit your Course Structure"
-      pageTitleSub={"Welcome to Egeria's Course Structure page"}
-      pageClass={"dashboard"}
-      parent={"Course Description"}
-      child={"Course Structure"}
-    >
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-            </div>
-            <div className="card-body">
-              <div className="row d-flex justify-content-center align-items-center py-20">
-                <div className="col-xl-8">
-                  <UploadLessonsForm />
+    <SetReduxState>
+      <Layout
+        headTitle="Course Structure"
+        pageTitle="Create or Edit your Course Structure"
+        pageTitleSub={"Welcome to Egeria's Course Structure page"}
+        pageClass={"dashboard"}
+        parent={"Course Description"}
+        child={"Course Structure"}
+      >
+        <div className="row">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-header">
+              </div>
+              <div className="card-body">
+                <div className="row d-flex justify-content-center align-items-center py-20">
+                  <div className="col-xl-8">
+                    <UploadLessonsForm courseInfo={query} />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </SetReduxState>
   );
 };
 

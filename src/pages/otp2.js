@@ -10,7 +10,6 @@ function Otp2() {
     const user = useSelector((state) => state.user.user);
     const router=useRouter();
     const phone = router.query;
-    console.log(phone)
 
 
     const [code, setCode] = useState();
@@ -19,7 +18,6 @@ function Otp2() {
         try {
             const comfirmResult=window.confirmCode;
             comfirmResult.confirm(code).then(async(result)=>{
-                console.log(result);
                 const docRef = doc(db, 'users', user?.uid);
                 await updateDoc(docRef, {
                     phone: phone.phone,

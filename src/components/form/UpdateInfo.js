@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
-import useReduxState from "../useReduxState";
+import SetReduxState from "../SetReduxState";
 
 
 const UpdateInfoSchema = Yup.object().shape({
@@ -25,7 +25,7 @@ function UpdateInfo() {
         newPassword: "",
     };
     return (
-        <useReduxState>
+        <SetReduxState>
             <Formik
                 enableReinitialize={true}
                 initialValues={initialValues}
@@ -38,7 +38,6 @@ function UpdateInfo() {
 
                             updatePassword(user, fields.newPassword)
                             .then(() => {
-                                console.log("Password updated successfully.");
                                 resetForm()
                             })
                             .catch((error) => {
@@ -125,7 +124,7 @@ function UpdateInfo() {
                     </Form>
                 )}
             </Formik>
-        </useReduxState>
+        </SetReduxState>
     );
 }
 export default UpdateInfo;

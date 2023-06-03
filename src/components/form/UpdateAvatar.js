@@ -2,7 +2,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import useReduxState from "../useReduxState";
+import SetReduxState from "../SetReduxState";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/utils/firebase";
 import { doc, updateDoc } from "firebase/firestore";
@@ -27,7 +27,7 @@ function UpdateAvatar() {
     const [image, setImage] = useState(null);
 
     return (
-        <useReduxState>
+        <SetReduxState>
             <Formik
                 initialValues={initialValues}
                 enableReinitialize={true}
@@ -108,7 +108,6 @@ function UpdateAvatar() {
                                     }
                                     onChange={(e) => {
                                         const file = e.target.files[0];
-                                        console.log(file);
                                         setImage(file);
                                     }}
                                 />
@@ -131,7 +130,7 @@ function UpdateAvatar() {
                     </Form>
                 )}
             </Formik>
-        </useReduxState>
+        </SetReduxState>
     );
 }
 export default UpdateAvatar;

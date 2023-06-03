@@ -2,30 +2,31 @@ import React, { useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Row, Col } from "reactstrap";
+import { useRouter } from "next/router";
 
 
-const initialValues = {
-  courseTitle: "",
-  courseDesc: "",
-  sections: [{ title: "", video: "", description: "" }],
-};
 
 const PersonalInfoSchema = Yup.object().shape({
-  courseTitle: Yup.string().required("Course Title is required"),
-  courseDesc: Yup.string().required("Course Description is required"),
+  // courseTitle: Yup.string().required("Course Title is required"),
+  // courseDesc: Yup.string().required("Course Description is required"),
   sections: Yup.array().of(
     Yup.object().shape({
       title: Yup.string().required("Title is required"),
-      video: Yup.string().required("Video is required"),
+      // video: Yup.string().required("Video is required"),
       description: Yup.string().required("Description is required"),
     })
   ),
 });
 
 function UploadCourse() {
-  const [sections, setSections] = useState([
-    { title: "", video: "", description: "" },
-  ]);
+  const router = useRouter();
+  const query = JSON.parse(router.query.data);
+  const initialValues = {
+    sections: query.sections[query.index].topics || [{ title: "", video: "", description: "" }],
+  };
+  console.log(query.sections[query.index].topics);
+
+  const [sections, setSections] = useState(query.sections[query.index].topics || [{ title: "", video: "", description: "" }]);
 
   const addSection = () => {
     setSections([...sections, { title: "", video: "", description: "" }]);
@@ -42,8 +43,12 @@ function UploadCourse() {
       <Formik
         initialValues={initialValues}
         validationSchema={PersonalInfoSchema}
+        enableReinitialize={true}
         onSubmit={(fields) => {
-          alert("SUCCESS!! :-)\n\n" + JSON.stringify(fields, null, 4));
+          let data = { ...query };
+          data.sections[data.index]['topics'] = [...fields.sections]
+          alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
+          router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
         }}
       >
         {({ errors, touched }) => (
@@ -61,7 +66,7 @@ function UploadCourse() {
                       className={
                         "form-control" +
                         (errors.sections?.[index]?.title &&
-                        touched.sections?.[index]?.title
+                          touched.sections?.[index]?.title
                           ? " is-invalid"
                           : "")
                       }
@@ -78,17 +83,19 @@ function UploadCourse() {
                     <label className="form-label">Video Upload</label>
                   </Col>
                   <Col lg="9">
-                    <Field
+                    <input
+                      // defaultValue={section.video}
                       name={`sections[${index}].video`}
                       type="file"
                       className={
                         "form-control" +
                         (errors.sections?.[index]?.video &&
-                        touched.sections?.[index]?.video
+                          touched.sections?.[index]?.video
                           ? " is-invalid"
                           : "")
                       }
                     />
+                    {/* <p>{section.video}</p> */}
                     <ErrorMessage
                       name={`sections[${index}].video`}
                       component="div"
@@ -108,7 +115,7 @@ function UploadCourse() {
                       className={
                         "form-control" +
                         (errors.sections?.[index]?.description &&
-                        touched.sections?.[index]?.description
+                          touched.sections?.[index]?.description
                           ? " is-invalid"
                           : "")
                       }
@@ -137,7 +144,7 @@ function UploadCourse() {
                 Previous
               </Button>
               <Button color="primary" type="submit">
-                Next Step
+                Save
               </Button>
             </div>
           </Form>
