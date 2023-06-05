@@ -19,9 +19,6 @@ const uploadMain = (props) => {
                 <div className="row">
                     <div className="col-12">
                         <div className="card">
-                            {/* <div className="card-header">
-                        <h4 className="card-title">Upload Details</h4>
-                    </div> */}
                             <div className="card-body">
                                 <div className="row d-flex justify-content-center align-items-center py-20">
                                     <div className="col-xl-8">

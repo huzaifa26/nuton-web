@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Row, Col } from "reactstrap";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 
 
@@ -20,13 +21,13 @@ const PersonalInfoSchema = Yup.object().shape({
 
 function UploadCourse() {
   const router = useRouter();
-  const query = JSON.parse(router.query.data);
+  const courseData=useSelector((state)=> state.course.newCourse);
+  console.log(courseData)
   const initialValues = {
-    sections: query.sections[query.index].topics || [{ title: "", video: "", description: "" }],
+    sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }],
   };
-  console.log(query.sections[query.index].topics);
 
-  const [sections, setSections] = useState(query.sections[query.index].topics || [{ title: "", video: "", description: "" }]);
+  const [sections, setSections] = useState(courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }]);
 
   const addSection = () => {
     setSections([...sections, { title: "", video: "", description: "" }]);
@@ -38,6 +39,16 @@ function UploadCourse() {
     setSections(updatedSections);
   };
 
+  const [videoArray, setVideoArray] = useState([]);
+
+  useEffect(() => {
+    if (courseData?.sections && courseData?.sections[courseData.index] && courseData?.sections[courseData.index]?.topics) {
+      const topics = courseData?.sections[courseData.index].topics;
+      const videos = topics.map((topic) => topic.video);
+      setVideoArray(videos);
+    }
+  }, []);
+
   return (
     <>
       <Formik
@@ -45,95 +56,104 @@ function UploadCourse() {
         validationSchema={PersonalInfoSchema}
         enableReinitialize={true}
         onSubmit={(fields) => {
-          let data = { ...query };
-          data.sections[data.index]['topics'] = [...fields.sections]
+          let data = { ...courseData };
+          console.log(fields)
+          const sections= fields.sections.map((section, index) => ({
+            ...section,
+            video: videoArray[index]
+          }));
+          console.log(sections)
+          // data.sections[data.index].topics = sections
           alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
-          router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
+          // router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
         }}
       >
         {({ errors, touched }) => (
           <Form>
-            {sections.map((section, index) => (
-              <div key={index} className="section-container">
-                <Row className="mb-20">
-                  <Col lg="3">
-                    <label className="form-label">Topic of this section:</label>
-                  </Col>
-                  <Col lg="9">
-                    <Field
-                      name={`sections[${index}].title`}
-                      type="text"
-                      className={
-                        "form-control" +
-                        (errors.sections?.[index]?.title &&
-                          touched.sections?.[index]?.title
-                          ? " is-invalid"
-                          : "")
-                      }
-                    />
-                    <ErrorMessage
-                      name={`sections[${index}].title`}
-                      component="div"
-                      className="invalid-feedback"
-                    />
-                  </Col>
-                </Row>
-                <Row className="mb-20">
-                  <Col lg="3">
-                    <label className="form-label">Video Upload</label>
-                  </Col>
-                  <Col lg="9">
-                    <input
-                      // defaultValue={section.video}
-                      name={`sections[${index}].video`}
-                      type="file"
-                      className={
-                        "form-control" +
-                        (errors.sections?.[index]?.video &&
-                          touched.sections?.[index]?.video
-                          ? " is-invalid"
-                          : "")
-                      }
-                    />
-                    {/* <p>{section.video}</p> */}
-                    <ErrorMessage
-                      name={`sections[${index}].video`}
-                      component="div"
-                      className="invalid-feedback"
-                    />
-                  </Col>
-                </Row>
-                <Row className="mb-20">
-                  <Col lg="3">
-                    <label className="form-label">Notification for this section:</label>
-                  </Col>
-                  <Col lg="9">
-                    <Field
-                      name={`sections[${index}].description`}
-                      as="textarea"
-                      rows="4"
-                      className={
-                        "form-control" +
-                        (errors.sections?.[index]?.description &&
-                          touched.sections?.[index]?.description
-                          ? " is-invalid"
-                          : "")
-                      }
-                    />
-                    <ErrorMessage
-                      name={`sections[${index}].description`}
-                      component="div"
-                      className="invalid-feedback"
-                    />
-                  </Col>
-                </Row>
-                <div className="section-button-row">
-                  <Button color="danger" onClick={() => deleteSection(index)}>
-                    <i className="bi bi-trash"></i> Delete
-                  </Button>
+            {sections.map((section, index) => {
+              return (
+                <div key={index} className="section-container">
+                  <Row className="mb-20">
+                    <Col lg="3">
+                      <label className="form-label">Topic of this section:</label>
+                    </Col>
+                    <Col lg="9">
+                      <Field
+                        name={`sections[${index}].title`}
+                        type="text"
+                        className={
+                          "form-control" +
+                          (errors.sections?.[index]?.title &&
+                            touched.sections?.[index]?.title
+                            ? " is-invalid"
+                            : "")
+                        }
+                      />
+                      <ErrorMessage
+                        name={`sections[${index}].title`}
+                        component="div"
+                        className="invalid-feedback"
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mb-20">
+                    <Col lg="3">
+                      <label className="form-label">Video Upload</label>
+                    </Col>
+                    <Col lg="9">
+                      <input
+                        // defaultValue={section.video}
+                        name={`sections[${index}].video`}
+                        type="file"
+                        className={
+                          "form-control" +
+                          (errors.sections?.[index]?.video &&
+                            touched.sections?.[index]?.video
+                            ? " is-invalid"
+                            : "")
+                        }
+                        onChange={(e) => { setVideoArray((prev) => [...prev, e.target.files[0]]) }}
+                      />
+                      {/* <p>{section.video}</p> */}
+                      <ErrorMessage
+                        name={`sections[${index}].video`}
+                        component="div"
+                        className="invalid-feedback"
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mb-20">
+                    <Col lg="3">
+                      <label className="form-label">Notification for this section:</label>
+                    </Col>
+                    <Col lg="9">
+                      <Field
+                        name={`sections[${index}].description`}
+                        as="textarea"
+                        rows="4"
+                        className={
+                          "form-control" +
+                          (errors.sections?.[index]?.description &&
+                            touched.sections?.[index]?.description
+                            ? " is-invalid"
+                            : "")
+                        }
+                      />
+                      <ErrorMessage
+                        name={`sections[${index}].description`}
+                        component="div"
+                        className="invalid-feedback"
+                      />
+                    </Col>
+                  </Row>
+                  <div className="section-button-row">
+                    <Button color="danger" onClick={() => deleteSection(index)}>
+                      <i className="bi bi-trash"></i> Delete
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
             <div className="section-button-row">
               <Button color="primary" className="add-button" onClick={addSection}>
                 +

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { RxCross2 } from "react-icons/rx"
 import { useRouter } from "next/router";
 import { query } from "firebase/firestore";
+import { newCourse } from "@/redux/reducers/courseSlice";
 
 const initialValues = {
   courseThambnail: "",
@@ -34,7 +35,6 @@ function UploadCourse() {
   const [tags, setTags] = useState([])
   const [tag, setTag] = useState()
 
-  console.log(image);
 
   const removeTagHandler = (index) => {
     let arr = [...tags];
@@ -57,26 +57,9 @@ function UploadCourse() {
             courseTags: tags,
             languages: fields.languages,
           }
-
+          
+          dispatch(newCourse(data));
           router.push({pathname:"/uploadlessons",query:{data: JSON.stringify(data)}})
-          return
-
-          if (image) {
-            const file = image;
-            const filename = user?.name + file?.name;
-
-            const storageRef = ref(storage, filename);
-            await uploadBytes(storageRef, file);
-
-            const downloadURL = await getDownloadURL(storageRef);
-            data.image = downloadURL
-          }
-
-          const docRef = doc(db, 'users', user?.uid);
-          await updateDoc(docRef, {
-            name: data.name,
-            image: data.image
-          });
         }}
       >
         {({ errors, touched }) => (
@@ -84,6 +67,7 @@ function UploadCourse() {
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
+                <img src={image && URL.createObjectURL(image) || null}/>
                 <input
                   name="courseThambnail"
                   type="file"

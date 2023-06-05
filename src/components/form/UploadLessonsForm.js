@@ -3,7 +3,8 @@ import { Formik, Field, ErrorMessage, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "reactstrap";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { newCourse } from "@/redux/reducers/courseSlice";
 
 
 const initialValues = {
@@ -18,10 +19,12 @@ const SectionSchema = Yup.object().shape({
   ),
 });
 
-const UploadLessonsForm = ({ courseInfo }) => {
+const UploadLessonsForm = () => {
   const router = useRouter();
   const user = useSelector((state) => state.user.user);
-  const [sections, setSections] = useState(courseInfo.sections || initialValues.sections);
+  const courseData=useSelector((state)=> {return state.course.newCourse})
+  const [sections, setSections] = useState(courseData?.sections || initialValues.sections);
+  const dispatch=useDispatch()
 
   const handleAddSection = () => {
     const nextSectionNumber = sections.length + 1;
@@ -53,10 +56,11 @@ const UploadLessonsForm = ({ courseInfo }) => {
   };
 
   const handleCourseContent = (index) => {
-    let course = courseInfo;
+    let course = {...courseData};
+    console.log(course)
     course['sections'] = sections;
-    console.log(course);
-    // router.push({ pathname: "/uploadcontent", query: { ...course, index } })
+    course['index'] = index;
+    dispatch(newCourse(course));
     router.push({ pathname: "/uploadcontent", query: { data: JSON.stringify({ ...course, index }) } })
   }
 
@@ -67,7 +71,7 @@ const UploadLessonsForm = ({ courseInfo }) => {
       onSubmit={(values) => {
         let data = { 
           uid: user.uid,
-          ...courseInfo 
+          ...courseData 
         }
         console.log(data);
         // router.push({ pathname: "/uploadcontent", query: { course: course, index: index } })

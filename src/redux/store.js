@@ -5,6 +5,7 @@ import analyticDataReducer from './reducers/analyticDataSlice';
 import myBalanceReducer from './reducers/myBalanceSlice';
 import profileVisitorReducer from './reducers/profileVisitorSlice';
 import totalSalesReducer from './reducers/totalSalesSlice';
+import courseReducer from './reducers/courseSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     analyticData: analyticDataReducer,
     myBalance: myBalanceReducer,
     profileVisitor: profileVisitorReducer,
-    totalSales: totalSalesReducer
+    totalSales: totalSalesReducer,
+    course:courseReducer
   },
 });
 
