@@ -9,8 +9,7 @@ const percentage = 66;
 const uploadContent = (props) => {
     const router = useRouter();
     let query = router.query;
-    console.log(JSON.parse(router.query.data))
-    let course = JSON.parse(router.query.data)
+
 
     return (
         <SetReduxState>
@@ -31,7 +30,7 @@ const uploadContent = (props) => {
                             <div className="card-body">
                                 <div className="row d-flex justify-content-center align-items-center py-20">
                                     <div className="col-xl-8">
-                                        <UploadContentForm course={course} />
+                                        <UploadContentForm />
                                     </div>
                                 </div>
                             </div>

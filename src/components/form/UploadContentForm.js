@@ -21,8 +21,7 @@ const PersonalInfoSchema = Yup.object().shape({
 
 function UploadCourse() {
   const router = useRouter();
-  const courseData=useSelector((state)=> state.course.newCourse);
-  console.log(courseData)
+  const courseData = useSelector((state) => state.course.newCourse);
   const initialValues = {
     sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }],
   };
@@ -57,13 +56,18 @@ function UploadCourse() {
         enableReinitialize={true}
         onSubmit={(fields) => {
           let data = { ...courseData };
-          console.log(fields)
-          const sections= fields.sections.map((section, index) => ({
+          const topics = fields.sections.map((section, index) => ({
             ...section,
             video: videoArray[index]
           }));
-          console.log(sections)
-          // data.sections[data.index].topics = sections
+          const section = { ...data.sections[data.index], topics: topics }
+          data.sections=data.sections.map((sec, index) => {
+            if (index === data.index) {
+              return section
+            }
+            return s
+          })
+          console.log(data);
           alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
           // router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
         }}
