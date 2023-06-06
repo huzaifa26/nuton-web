@@ -6,7 +6,9 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { newCourse } from "@/redux/reducers/courseSlice";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/utils/firebase";
+import { db, storage } from "@/utils/firebase";
+import { toast } from "react-toastify";
+import { addDoc, collection } from "firebase/firestore";
 
 
 const initialValues = {
@@ -24,9 +26,9 @@ const SectionSchema = Yup.object().shape({
 const UploadLessonsForm = () => {
   const router = useRouter();
   const user = useSelector((state) => state.user.user);
-  const courseData=useSelector((state)=> {return state.course.newCourse})
+  const courseData = useSelector((state) => { return state.course.newCourse })
   const [sections, setSections] = useState(courseData?.sections || initialValues.sections);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
 
   const handleAddSection = () => {
     const nextSectionNumber = sections.length + 1;
@@ -58,7 +60,7 @@ const UploadLessonsForm = () => {
   };
 
   const handleCourseContent = (index) => {
-    let course = {...courseData};
+    let course = { ...courseData };
     console.log(course)
     course['sections'] = sections;
     course['index'] = index;
@@ -69,32 +71,32 @@ const UploadLessonsForm = () => {
   async function uploadImage(file) {
     try {
       const storageRef = ref(storage, "images/" + file.name);
-    
+
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
       console.log("Image uploaded successfully. Download URL:", downloadURL);
       return downloadURL; // Return the download URL if needed
-    
+
     } catch (error) {
       console.error("Error uploading image:", error);
       throw error;
     }
   }
 
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false)
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={SectionSchema}
-      onSubmit={async(values) => {
-        let data = { 
+      onSubmit={async (values) => {
+        let data = {
           uid: user.uid,
-          ...courseData 
+          ...courseData
         }
 
         try {
-
+          setLoading(true);
           // Upload course thumbnail if present
           if (data.courseThambnail instanceof File) {
             const thumbnailRef = ref(storage, "thumbnails/" + data.courseThambnail.name);
@@ -103,7 +105,7 @@ const UploadLessonsForm = () => {
             data.courseThambnail = thumbnailURL;
             console.log("Course thumbnail uploaded successfully.");
           }
-      
+
           // Upload videos in topics array within sections array
           const updatedSections = await Promise.all(data.sections.map(async (section) => {
             const updatedTopics = await Promise.all(section.topics.map(async (topic) => {
@@ -116,20 +118,22 @@ const UploadLessonsForm = () => {
               return topic;
             }));
             return { ...section, topics: updatedTopics };
-          }));
+          }))
 
           data = { ...data, sections: updatedSections };
-
           console.log(data);
 
-          setLoading(false)
+          const courseCollectionRef = collection(db, "course");
+          addDoc(courseCollectionRef, data);
+          toast.success("Course added");
+          router.push("/uploadmain")
+          setLoading(false);
         } catch (error) {
+
           console.error("Error uploading file:", error);
           setLoading(false)
           throw error;
         }
-        console.log(data);
-        // router.push({ pathname: "/uploadcontent", query: { course: course, index: index } })
       }}
     >
       {({ errors, touched }) => (
@@ -183,7 +187,7 @@ const UploadLessonsForm = () => {
               </div>
               <div className="text-center">
                 <Button type="submit" color="primary">
-                  {loading?<img src="./loader.svg"/>:"Save"}
+                  {loading ? <img className="w-[30.51px] m-auto" src="/loader.svg" /> : "Save"}
                 </Button>
               </div>
             </div>

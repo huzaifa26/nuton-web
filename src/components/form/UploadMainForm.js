@@ -59,7 +59,7 @@ function UploadCourse() {
           }
 
           dispatch(newCourse(data));
-          router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
+          router.push({ pathname: "/uploadlessons" })
         }}
       >
         {({ errors, touched }) => (
