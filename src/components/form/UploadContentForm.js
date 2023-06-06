@@ -3,7 +3,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Row, Col } from "reactstrap";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { newCourse } from "@/redux/reducers/courseSlice";
 
 
 
@@ -21,6 +22,7 @@ const PersonalInfoSchema = Yup.object().shape({
 
 function UploadCourse() {
   const router = useRouter();
+  const dispatch=useDispatch();
   const courseData = useSelector((state) => state.course.newCourse);
   const initialValues = {
     sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }],
@@ -65,11 +67,12 @@ function UploadCourse() {
             if (index === data.index) {
               return section
             }
-            return s
+            return sec
           })
           console.log(data);
-          alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
-          // router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
+          dispatch(newCourse(data));
+          // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
+          router.push({ pathname: "/uploadlessons" })
         }}
       >
         {({ errors, touched }) => (

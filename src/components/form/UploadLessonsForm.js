@@ -5,6 +5,8 @@ import { Button } from "reactstrap";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { newCourse } from "@/redux/reducers/courseSlice";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/utils/firebase";
 
 
 const initialValues = {
@@ -64,14 +66,67 @@ const UploadLessonsForm = () => {
     router.push({ pathname: "/uploadcontent", query: { data: JSON.stringify({ ...course, index }) } })
   }
 
+  async function uploadImage(file) {
+    try {
+      const storageRef = ref(storage, "images/" + file.name);
+    
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      console.log("Image uploaded successfully. Download URL:", downloadURL);
+      return downloadURL; // Return the download URL if needed
+    
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  }
+
+  const [loading,setLoading]=useState(false)
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={SectionSchema}
-      onSubmit={(values) => {
+      onSubmit={async(values) => {
         let data = { 
           uid: user.uid,
           ...courseData 
+        }
+
+        try {
+
+          // Upload course thumbnail if present
+          if (data.courseThambnail instanceof File) {
+            const thumbnailRef = ref(storage, "thumbnails/" + data.courseThambnail.name);
+            await uploadBytes(thumbnailRef, data.courseThambnail);
+            const thumbnailURL = await getDownloadURL(thumbnailRef);
+            data.courseThambnail = thumbnailURL;
+            console.log("Course thumbnail uploaded successfully.");
+          }
+      
+          // Upload videos in topics array within sections array
+          const updatedSections = await Promise.all(data.sections.map(async (section) => {
+            const updatedTopics = await Promise.all(section.topics.map(async (topic) => {
+              if (topic.video instanceof File) {
+                const videoRef = ref(storage, "videos/" + topic.video.name);
+                await uploadBytes(videoRef, topic.video);
+                const videoURL = await getDownloadURL(videoRef);
+                return { ...topic, video: videoURL };
+              }
+              return topic;
+            }));
+            return { ...section, topics: updatedTopics };
+          }));
+
+          data = { ...data, sections: updatedSections };
+
+          console.log(data);
+
+          setLoading(false)
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          setLoading(false)
+          throw error;
         }
         console.log(data);
         // router.push({ pathname: "/uploadcontent", query: { course: course, index: index } })
@@ -128,7 +183,7 @@ const UploadLessonsForm = () => {
               </div>
               <div className="text-center">
                 <Button type="submit" color="primary">
-                  Save
+                  {loading?<img src="./loader.svg"/>:"Save"}
                 </Button>
               </div>
             </div>

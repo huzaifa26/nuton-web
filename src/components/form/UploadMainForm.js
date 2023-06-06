@@ -27,7 +27,7 @@ const PersonalInfoSchema = Yup.object().shape({
 });
 
 function UploadCourse() {
-  const router=useRouter()
+  const router = useRouter()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user);
 
@@ -57,9 +57,9 @@ function UploadCourse() {
             courseTags: tags,
             languages: fields.languages,
           }
-          
+
           dispatch(newCourse(data));
-          router.push({pathname:"/uploadlessons",query:{data: JSON.stringify(data)}})
+          router.push({ pathname: "/uploadlessons", query: { data: JSON.stringify(data) } })
         }}
       >
         {({ errors, touched }) => (
@@ -67,7 +67,7 @@ function UploadCourse() {
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
-                <img src={image && URL.createObjectURL(image) || null}/>
+                <img src={image && URL.createObjectURL(image) || null} />
                 <input
                   name="courseThambnail"
                   type="file"
@@ -77,7 +77,7 @@ function UploadCourse() {
                       ? " is-invalid"
                       : "")
                   }
-                  onChange={(e)=> setImage(e.target.files[0])}
+                  onChange={(e) => setImage(e.target.files[0])}
                 />
                 <ErrorMessage
                   name="courseThambnail"
@@ -156,36 +156,34 @@ function UploadCourse() {
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Tags</label>
               <div style={{ display: 'flex', flexDirection: "column" }} className="col-lg-9">
-                <div className="col-lg-9 form-control flex bg-[aqua]">
-                  <div className="flex gap-[0.521vw]">
-                    {tags?.map((tag,index) => {
-                      return (
-                        <div className="flex gap-[0.521vw] justify-center">
-                          <p>{tag}</p>
-                          <RxCross2 onClick={()=> removeTagHandler(index)} className="mt-[3px] hover:bg-[rgba(0,0,0,0.15)] rounded-full"/>
-                        </div>
-                      )
-                    })}
-                  </div>
-                  <input
-                    name="courseTags"
-                    type="text"
-                    className={
-                      "flex-1 h-full bg-[red]" +
-                      (errors.courseTags && touched.courseTags
-                        ? " is-invalid"
-                        : "")
+                <input
+                  name="courseTags"
+                  type="text"
+                  className={
+                    "form-control h-full bg-[red]" +
+                    (errors.courseTags && touched.courseTags
+                      ? " is-invalid"
+                      : "")
+                  }
+                  value={tag}
+                  onChange={(e) => { setTag(e.target.value) }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault(); setTags((prev) => {
+                        return [...prev, tag]
+                      }); setTag('')
                     }
-                    value={tag}
-                    onChange={(e) => { setTag(e.target.value) }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault(); setTags((prev) => {
-                          return [...prev, tag]
-                        }); setTag('')
-                      }
-                    }}
-                  />
+                  }}
+                />
+                <div className="flex gap-[0.521vw] px-[20px] py-[10px]">
+                  {tags?.map((tag, index) => {
+                    return (
+                      <div className="flex gap-[0.521vw] justify-center h-[30px] px-[10px]">
+                        <p>{tag}</p>
+                        <RxCross2 onClick={() => removeTagHandler(index)} className="mt-[3px] hover:bg-[rgba(0,0,0,0.15)] rounded-full" />
+                      </div>
+                    )
+                  })}
                 </div>
                 <ErrorMessage
                   name="courseTags"
