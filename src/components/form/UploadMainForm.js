@@ -2,7 +2,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from 'reactstrap'
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx"
 import { useRouter } from "next/router";
 import { query } from "firebase/firestore";
@@ -34,7 +34,7 @@ function UploadCourse() {
   const [image, setImage] = useState(null)
   const [tags, setTags] = useState([])
   const [tag, setTag] = useState()
-
+  const [showImageError, setShowErrorMessage] = useState(false);
 
   const removeTagHandler = (index) => {
     let arr = [...tags];
@@ -42,6 +42,42 @@ function UploadCourse() {
     setTags(arr);
   }
 
+  const fileInputRef = useRef(null);
+
+
+  const thumbnailImageHandler = (e) => {
+    let file = e.target.files[0];
+  
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        const image = new Image();
+  
+        image.onload = () => {
+          const dimensions = {
+            width: image.width,
+            height: image.height
+          };
+          console.log(dimensions);
+          if (dimensions.width < 560 && dimensions.height < 400) {
+            setImage(file);
+            setShowErrorMessage(false);
+          } else {
+            fileInputRef.current.value = null; // Clear the file input value
+            setShowErrorMessage(true);
+          }
+        };
+  
+        image.src = e.target.result;
+      };
+  
+      reader.readAsDataURL(file); // Read the contents of the file
+    }
+  };
+
+
+  console.log(image)
   return (
     <>
       <Formik
@@ -68,17 +104,28 @@ function UploadCourse() {
               <label className="form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
                 <img src={image && URL.createObjectURL(image) || null} />
+                {/* <div className={
+                  "form-control col-lg-9" +
+                  (errors.courseThambnail && touched.courseThambnail
+                    ? " is-invalid"
+                    : "")}>
+                  <label htmlFor="image" className="cursor-pointer bg-[#DDE0E3] text-[#A1A8BB] rounded-[4px] px-[12px] py-[6px] mt-[-6px]" >Choose Image</label>
+                </div> */}
                 <input
                   name="courseThambnail"
                   type="file"
+                  id="image"
                   className={
                     "form-control col-lg-9" +
                     (errors.courseThambnail && touched.courseThambnail
                       ? " is-invalid"
                       : "")
                   }
-                  onChange={(e) => setImage(e.target.files[0])}
+                  onChange={(e) => { alert(1); thumbnailImageHandler(e) }}
+                  ref={fileInputRef}
+                  multiple
                 />
+                {showImageError ? <p className="text-[#f1416c] mt-[5px] mb-[-10px]">Image cannot be greater tha given dimension</p> : null}
                 <ErrorMessage
                   name="courseThambnail"
                   component="div"

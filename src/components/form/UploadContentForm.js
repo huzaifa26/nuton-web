@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Row, Col } from "reactstrap";
@@ -22,7 +22,7 @@ const PersonalInfoSchema = Yup.object().shape({
 
 function UploadCourse() {
   const router = useRouter();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const courseData = useSelector((state) => state.course.newCourse);
   const initialValues = {
     sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }],
@@ -41,6 +41,8 @@ function UploadCourse() {
   };
 
   const [videoArray, setVideoArray] = useState([]);
+  const fileInputsRef = useRef([]);
+
 
   useEffect(() => {
     if (courseData?.sections && courseData?.sections[courseData.index] && courseData?.sections[courseData.index]?.topics) {
@@ -49,6 +51,25 @@ function UploadCourse() {
       setVideoArray(videos);
     }
   }, []);
+
+  const [sectionErrors, setSectionErrors] = useState(Array(sections.length).fill(false));
+
+  const videoUploadHandler = (e, index) => {
+    const file = e.target.files[0];
+
+    if (file && file.type === 'video/mp4') {
+      setVideoArray((prev) => [...prev, file]);
+      const updatedErrors = [...sectionErrors];
+      updatedErrors[index] = false;
+      setSectionErrors(updatedErrors);
+    } else {
+      const updatedErrors = [...sectionErrors];
+      updatedErrors[index] = true;
+      setSectionErrors(updatedErrors);
+      fileInputsRef.current[index].value = null
+      console.log('Invalid video format. Please select an MP4 video.');
+    }
+  }
 
   return (
     <>
@@ -63,7 +84,7 @@ function UploadCourse() {
             video: videoArray[index]
           }));
           const section = { ...data.sections[data.index], topics: topics }
-          data.sections=data.sections.map((sec, index) => {
+          data.sections = data.sections.map((sec, index) => {
             if (index === data.index) {
               return section
             }
@@ -110,6 +131,7 @@ function UploadCourse() {
                     <Col lg="9">
                       <input
                         // defaultValue={section.video}
+                        ref={el => fileInputsRef.current[index] = el}
                         name={`sections[${index}].video`}
                         type="file"
                         className={
@@ -119,8 +141,9 @@ function UploadCourse() {
                             ? " is-invalid"
                             : "")
                         }
-                        onChange={(e) => { setVideoArray((prev) => [...prev, e.target.files[0]]) }}
+                        onChange={(e) => { videoUploadHandler(e, index) }}
                       />
+                      {sectionErrors[index] ? <p className="text-[#f1416c] mt-[5px] mb-[-10px]">Plaese provide the mp4 format video</p> : null}
                       {/* <p>{section.video}</p> */}
                       <ErrorMessage
                         name={`sections[${index}].video`}
