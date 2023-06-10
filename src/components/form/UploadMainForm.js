@@ -2,7 +2,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from 'reactstrap'
 import { useDispatch, useSelector } from "react-redux";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx"
 import { useRouter } from "next/router";
 import { query } from "firebase/firestore";
@@ -28,8 +28,22 @@ const PersonalInfoSchema = Yup.object().shape({
 
 function UploadCourse() {
   const router = useRouter()
+  const { id } = router.query
+
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user);
+  const allCourses = useSelector((state) => state.course.allCourses);
+  const [editCourse, setEditCourse] = useState()
+
+  console.log(allCourses)
+  const [iniValues, setIniValues] = useState()
+
+  useEffect(() => {
+    const specificCourse = allCourses?.find((course) => course.id === id);
+    setIniValues(specificCourse || initialValues);
+    setEditCourse(specificCourse);
+    setTags(specificCourse?.courseTags);
+  }, [allCourses, id]);
 
   const [image, setImage] = useState(null)
   const [tags, setTags] = useState([])
@@ -44,16 +58,15 @@ function UploadCourse() {
 
   const fileInputRef = useRef(null);
 
-
   const thumbnailImageHandler = (e) => {
     let file = e.target.files[0];
-  
+
     if (file) {
       const reader = new FileReader();
-      
+
       reader.onload = (e) => {
         const image = new Image();
-  
+
         image.onload = () => {
           const dimensions = {
             width: image.width,
@@ -68,33 +81,39 @@ function UploadCourse() {
             setShowErrorMessage(true);
           }
         };
-  
+
         image.src = e.target.result;
       };
-  
+
       reader.readAsDataURL(file); // Read the contents of the file
     }
   };
 
 
-  console.log(image)
+
   return (
     <>
       <Formik
-        initialValues={initialValues}
+        initialValues={iniValues}
         enableReinitialize={true}
         validationSchema={PersonalInfoSchema}
         onSubmit={async (fields) => {
 
           let data = {
-            courseThambnail: image || fields.courseThambnail || null,
+            courseThambnail: image || fields.courseThambnail || editCourse.courseThambnail || null,
             courseTitle: fields.courseTitle,
             courseDesc: fields.courseDesc,
+            courseCategory: fields.courseCategory,
             courseTags: tags,
             languages: fields.languages,
           }
 
-          dispatch(newCourse(data));
+          if (id) {
+            let editedCourse = { ...editCourse, ...data }
+            dispatch(newCourse(editedCourse));
+          } else {
+            dispatch(newCourse(data));
+          }
           router.push({ pathname: "/uploadlessons" })
         }}
       >
@@ -103,7 +122,7 @@ function UploadCourse() {
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
-                <img src={image && URL.createObjectURL(image) || null} />
+                <img src={iniValues?.courseThambnail || image} />
                 {/* <div className={
                   "form-control col-lg-9" +
                   (errors.courseThambnail && touched.courseThambnail

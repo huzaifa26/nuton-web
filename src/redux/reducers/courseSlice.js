@@ -9,12 +9,14 @@ const couseSlice = createSlice({
     initialState,
     reducers: {
         newCourse: (state, action) => {
-            console.log(action.payload)
             state.newCourse = action.payload;
+        },
+        allCourses: (state, action) => {
+            state.allCourses = action.payload;
         },
     },
 });
 
-export const { newCourse } = couseSlice.actions;
+export const { newCourse,allCourses } = couseSlice.actions;
 
 export default couseSlice.reducer;

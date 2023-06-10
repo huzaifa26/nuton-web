@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 function Sidebar() {
     const router = useRouter();
@@ -7,7 +8,7 @@ function Sidebar() {
         {
             icon: "ri-grid-fill",
             name: "Dashboard",
-            path: "",
+            path: "dashboard",
         },
         {
             icon: "ri-stack-fill",

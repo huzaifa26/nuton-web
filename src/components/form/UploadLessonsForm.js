@@ -8,7 +8,7 @@ import { newCourse } from "@/redux/reducers/courseSlice";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/utils/firebase";
 import { toast } from "react-toastify";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 
 const initialValues = {
@@ -121,12 +121,25 @@ const UploadLessonsForm = () => {
           }))
 
           data = { ...data, sections: updatedSections };
-          console.log(data);
 
-          const courseCollectionRef = collection(db, "course");
-          addDoc(courseCollectionRef, data);
-          toast.success("Course added");
-          router.push("/uploadmain")
+          if (data?.id) {
+            const docRef = doc(db, "course", data.id);
+
+            try {
+              await setDoc(docRef, data, { merge: true });
+              console.log("Document replaced successfully");
+              toast.success("Course Updated");
+              router.push("/courses")
+            } catch (error) {
+              console.error("Error replacing document:", error);
+            }
+          } else {
+            const courseCollectionRef = collection(db, "course");
+            addDoc(courseCollectionRef, data);
+            toast.success("Course added");
+            router.push("/uploadmain")
+          }
+
           setLoading(false);
         } catch (error) {
 

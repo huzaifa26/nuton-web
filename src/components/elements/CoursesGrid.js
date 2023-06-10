@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Row } from 'reactstrap';
 import Link from "next/link";
 import { Progress } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import AnalyticChart from '../chart/AnalyticChart';
+import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
+import { db } from "@/utils/firebase";
+import SetReduxState from '../SetReduxState';
+import { useRouter } from 'next/router';
+import { allCourses } from '@/redux/reducers/courseSlice';
 
 function CoursesGrid() {
 
+    const router = useRouter()
+    const dispatch=useDispatch()
     const [ReviewModal, setModal] = useState(false);
     const [AnalyticModal, setAnalyticModal] = useState(false);
 
@@ -70,39 +78,64 @@ function CoursesGrid() {
         // },
     ];
 
+    const [courses, setCourses] = useState();
+    const user = useSelector((state) => state.user.user);
+
+    const getCourses = async () => {
+        const q = query(collection(db, "course"), where("uid", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const courses = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                console.log(data);
+                courses.push({ id: doc.id, ...data });
+            });
+            console.log(courses)
+            dispatch(allCourses(courses))
+            setCourses(courses)
+        });
+    }
+
+    useEffect(() => {
+        if (user) {
+            getCourses();
+        }
+    }, [user])
+
+
     return (
-        <>
-            {courseItem.map((item, id) => (
+        <SetReduxState>
+            {courses?.map((item, id) => (
                 <>
                     <div className="col-lg-6" key={id}>
                         <div className="card">
                             <img
-                                src={`/images/courses/${item.imgId}.jpg`}
+                                // src={`/images/courses/${item.imgId}.jpg`}
+                                src={item?.courseThambnail}
                                 className="img-fluid card-img-top"
                                 alt=""
                             />
                             <div className="card-body courses-details">
-                                <h5>{item.title}</h5>
+                                <h5>{item?.courseTitle}</h5>
                                 <div className="courses-details-info d-flex justify-content-left">
                                     <div className="courses-details-info-box">
                                         <i className="ri-shopping-cart-2-line"></i>
-                                        <span>{item.sales} Sales</span>
+                                        <span>{item?.sales || 0} Sales</span>
                                     </div>
                                     <div className="courses-details-info-box">
                                         <i className="ri-message-2-line"></i>
-                                        <span>{item.comments} Comments</span>
+                                        <span>{item?.comments || 0} Comments</span>
                                     </div>
-                                    <div className="courses-details-info-box">
+                                    {/* <div className="courses-details-info-box">
                                         <i className="ri-heart-2-line"></i>
-                                        <span>{item.likes} likes</span>
-                                    </div>
+                                        <span>{item?.likes  || 0} likes</span>
+                                    </div> */}
                                 </div>
                                 <p>{item.desc}</p>
                                 <div className="courses-action">
-                                    <Link href="upload">Edit</Link>
+                                    <p className='cursor-pointer' onClick={() => router.push({ pathname: "uploadmain", query:{id:item.id} })}>Edit</p>
                                     <Button onClick={AnalyticToggle} className="btn btn-light text-dark">Analytics</Button>
                                     <Button onClick={ReviewToggle} className="btn btn-light text-dark">Reviews</Button>
-
                                 </div>
                             </div>
                         </div>
@@ -211,7 +244,7 @@ function CoursesGrid() {
                                     <Button className="" color="danger" onClick={ReviewToggle}>Ignore</Button>
                                 </div>
                             </div>
-                            
+
                         </PerfectScrollbar>
                     </ModalBody>
                     {/* <ModalFooter>
@@ -254,7 +287,7 @@ function CoursesGrid() {
                     </ModalFooter>
                 </Modal>
             </div>
-        </>
+        </SetReduxState>
     );
 }
 export default CoursesGrid;

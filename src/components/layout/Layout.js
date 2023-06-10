@@ -17,6 +17,9 @@ const Layout = ({
     useEffect(() => {
         setHeight(window.screen.height);
     }, []);
+
+    
+
     return (
         <>
             <PageHead headTitle={"headTitle"} />
