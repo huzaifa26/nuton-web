@@ -9,6 +9,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/utils/firebase";
 import { toast } from "react-toastify";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import Loader from "../Loader";
 
 
 const initialValues = {
@@ -200,7 +201,7 @@ const UploadLessonsForm = () => {
               </div>
               <div className="text-center">
                 <Button type="submit" color="primary">
-                  {loading ? <img className="w-[30.51px] m-auto" src="/loader.svg" /> : "Save"}
+                  {loading ? <Loader /> : "Save"}
                 </Button>
               </div>
             </div>
