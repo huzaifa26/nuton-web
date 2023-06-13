@@ -42,7 +42,7 @@ function UploadCourse() {
     const specificCourse = allCourses?.find((course) => course.id === id);
     setIniValues(specificCourse || initialValues);
     setEditCourse(specificCourse);
-    setTags(specificCourse?.courseTags);
+    setTags(specificCourse?.courseTags || []);
   }, [allCourses, id]);
 
   const [image, setImage] = useState(null)
@@ -73,7 +73,7 @@ function UploadCourse() {
             height: image.height
           };
           console.log(dimensions);
-          if (dimensions.width < 560 && dimensions.height < 400) {
+          if ((dimensions.width < 600 && dimensions.height < 600) && (dimensions.width === dimensions.height)) {
             setImage(file);
             setShowErrorMessage(false);
           } else {
@@ -122,7 +122,7 @@ function UploadCourse() {
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
-                <img src={iniValues?.courseThambnail || image} />
+                <img src={image && URL.createObjectURL(image) || iniValues?.courseThambnail || image} />
                 {/* <div className={
                   "form-control col-lg-9" +
                   (errors.courseThambnail && touched.courseThambnail
@@ -140,11 +140,11 @@ function UploadCourse() {
                       ? " is-invalid"
                       : "")
                   }
-                  onChange={(e) => { alert(1); thumbnailImageHandler(e) }}
+                  onChange={(e) => { thumbnailImageHandler(e) }}
                   ref={fileInputRef}
                   multiple
                 />
-                {showImageError ? <p className="text-[#f1416c] mt-[5px] mb-[-10px]">Image cannot be greater tha given dimension</p> : null}
+                {showImageError ? <p className="text-[#f1416c] mt-[5px] mb-[-10px]">Image must be square and less than 600x600</p> : null}
                 <ErrorMessage
                   name="courseThambnail"
                   component="div"
@@ -235,7 +235,8 @@ function UploadCourse() {
                   onChange={(e) => { setTag(e.target.value) }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      e.preventDefault(); setTags((prev) => {
+                      e.preventDefault(); 
+                      setTags((prev) => {
                         return [...prev, tag]
                       }); setTag('')
                     }

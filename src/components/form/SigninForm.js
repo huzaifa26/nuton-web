@@ -15,10 +15,7 @@ const SigninFormSchema = Yup.object().shape({
         .required("Password is required"),
 });
 
-
-
 function SigninForm({ getCredentials, loading }) {
-
 
     return (
         <>
