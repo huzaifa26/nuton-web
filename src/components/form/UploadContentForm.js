@@ -10,7 +10,6 @@ const PersonalInfoSchema = Yup.object().shape({
   sections: Yup.array().of(
     Yup.object().shape({
       title: Yup.string().required("Title is required"),
-      video: Yup.string().required("Video is required"),
       description: Yup.string().required("Description is required"),
       questions: Yup.array().of(
         Yup.object().shape({
@@ -23,48 +22,56 @@ const PersonalInfoSchema = Yup.object().shape({
 });
 
 function UploadCourse() {
+
   const router = useRouter();
   const dispatch = useDispatch();
   const courseData = useSelector((state) => state.course.newCourse);
   const initialValues = {
-    sections: courseData?.sections[courseData.index]?.topics || [
-      {
-        title: "",
-        video: "",
-        description: "",
-        questions: [],
-      },
-    ],
+    sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }],
   };
 
-  const [sections, setSections] = useState(
-    courseData?.sections[courseData.index]?.topics || [
-      {
-        title: "",
-        video: "",
-        description: "",
-        questions: [],
-      },
-    ]
-  );
+  const [sections, setSections] = useState(courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }]);
+
 
   const addSection = () => {
-    setSections([
-      ...sections,
-      {
-        title: "",
-        video: "",
-        description: "",
-        questions: [],
-      },
-    ]);
+    setSections([...sections, { title: "", video: "", description: "" }]);
   };
 
-  const deleteSection = (sectionIndex) => {
+  const deleteSection = (index) => {
     const updatedSections = [...sections];
-    updatedSections.splice(sectionIndex, 1);
+    updatedSections.splice(index, 1);
     setSections(updatedSections);
   };
+
+  const [videoArray, setVideoArray] = useState([]);
+  const fileInputsRef = useRef([]);
+
+  useEffect(() => {
+    if (courseData?.sections && courseData?.sections[courseData.index] && courseData?.sections[courseData.index]?.topics) {
+      const topics = courseData?.sections[courseData.index].topics;
+      const videos = topics.map((topic) => topic.video);
+      setVideoArray(videos);
+    }
+  }, []);
+
+  const [sectionErrors, setSectionErrors] = useState(Array(sections.length).fill(false));
+
+  const videoUploadHandler = (e, index) => {
+    const file = e.target.files[0];
+
+    if (file && file.type === 'video/mp4') {
+      setVideoArray((prev) => [...prev, file]);
+      const updatedErrors = [...sectionErrors];
+      updatedErrors[index] = false;
+      setSectionErrors(updatedErrors);
+    } else {
+      const updatedErrors = [...sectionErrors];
+      updatedErrors[index] = true;
+      setSectionErrors(updatedErrors);
+      fileInputsRef.current[index].value = null
+      console.log('Invalid video format. Please select an MP4 video.');
+    }
+  }
 
   const addQuestion = (sectionIndex) => {
     const numQuestions = parseInt(
@@ -90,20 +97,18 @@ function UploadCourse() {
           let data = { ...courseData };
           const topics = fields.sections.map((section, index) => ({
             ...section,
+            video: videoArray[index]
           }));
-          const section = {
-            ...data.sections[data.index],
-            topics: topics,
-          };
+          const section = { ...data.sections[data.index], topics: topics }
           data.sections = data.sections.map((sec, index) => {
             if (index === data.index) {
-              return section;
+              return section
             }
-            return sec;
-          });
+            return sec
+          })
           console.log(data);
           dispatch(newCourse(data));
-          router.push({ pathname: "/uploadlessons" });
+          router.push({ pathname: "/uploadlessons" })
         }}
       >
         {({ errors, touched }) => (
@@ -140,6 +145,7 @@ function UploadCourse() {
                   <Col lg="9">
                     <input
                       name={`sections[${sectionIndex}].video`}
+                      ref={el => fileInputsRef.current[sectionIndex] = el}
                       type="file"
                       className={
                         "form-control" +
@@ -148,7 +154,9 @@ function UploadCourse() {
                           ? " is-invalid"
                           : "")
                       }
+                      onChange={(e) => { videoUploadHandler(e, sectionIndex) }}
                     />
+                    {sectionErrors[sectionIndex] ? <p className="text-[#f1416c] mt-[5px] mb-[-10px]">Please provide the mp4 format video</p> : null}
                     <ErrorMessage
                       name={`sections[${sectionIndex}].video`}
                       component="div"
@@ -180,7 +188,7 @@ function UploadCourse() {
                     />
                   </Col>
                 </Row>
-                {section.questions.length > 0 ? (
+                {section?.questions?.length > 0 ? (
                   section.questions.map((question, questionIndex) => (
                     <div key={questionIndex}>
                       <Row className="mb-20">

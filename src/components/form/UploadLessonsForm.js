@@ -122,7 +122,6 @@ const UploadLessonsForm = () => {
           }))
 
           data = { ...data, sections: updatedSections };
-
           if (data?.id) {
             const docRef = doc(db, "course", data.id);
 
