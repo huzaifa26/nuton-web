@@ -45,6 +45,7 @@ function UploadCourse() {
 
   const [videoArray, setVideoArray] = useState([]);
   const fileInputsRef = useRef([]);
+  const videoRef = useRef([]);
 
   useEffect(() => {
     if (courseData?.sections && courseData?.sections[courseData.index] && courseData?.sections[courseData.index]?.topics) {
@@ -56,8 +57,19 @@ function UploadCourse() {
 
   const [sectionErrors, setSectionErrors] = useState(Array(sections.length).fill(false));
 
+
   const videoUploadHandler = (e, index) => {
     const file = e.target.files[0];
+
+    if (file) {
+      const videoObject = URL.createObjectURL(file);
+
+      videoRef.current[index].src = videoObject;
+
+      videoRef.current[index].onloadedmetadata = () => {
+        console.log('Video duration:', videoRef.current[index].duration);
+      };
+    }
 
     if (file && file.type === 'video/mp4') {
       setVideoArray((prev) => [...prev, file]);
@@ -138,11 +150,17 @@ function UploadCourse() {
                     />
                   </Col>
                 </Row>
+
                 <Row className="mb-20">
                   <Col lg="3">
                     <label className="form-label">Video Upload</label>
                   </Col>
                   <Col lg="9">
+                    {
+                      <div style={videoRef.current[sectionIndex]?.src ? {} : { display: 'none' }} className="max-h-[300px] mb-8">
+                        <video className="max-h-[300px]" ref={el => videoRef.current[sectionIndex] = el} controls />
+                      </div>
+                    }
                     <input
                       name={`sections[${sectionIndex}].video`}
                       ref={el => fileInputsRef.current[sectionIndex] = el}
