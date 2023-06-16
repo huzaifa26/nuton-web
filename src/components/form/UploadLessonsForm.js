@@ -95,7 +95,11 @@ const UploadLessonsForm = () => {
           uid: user.uid,
           ...courseData
         }
-
+        let courseLength = 0;
+        data.sections.forEach((sec) => {
+          courseLength = courseLength + sec.length
+        })
+        data.courseLength=courseLength;
         try {
           setLoading(true);
           // Upload course thumbnail if present
@@ -122,6 +126,8 @@ const UploadLessonsForm = () => {
           }))
 
           data = { ...data, sections: updatedSections };
+          console.log(data);
+          return
           if (data?.id) {
             const docRef = doc(db, "course", data.id);
 

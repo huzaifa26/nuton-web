@@ -107,18 +107,23 @@ function UploadCourse() {
         enableReinitialize={true}
         onSubmit={(fields) => {
           let data = { ...courseData };
-          const topics = fields.sections.map((section, index) => ({
-            ...section,
-            video: videoArray[index]
-          }));
+          let sectionLength=0;
+          const topics = fields.sections.map((topic, index) => {
+            sectionLength=sectionLength+videoRef?.current[index]?.duration
+            return ({
+              ...topic,
+              video: videoArray[index],
+              length: videoRef?.current[index]?.duration
+            })
+          });
           const section = { ...data.sections[data.index], topics: topics }
           data.sections = data.sections.map((sec, index) => {
             if (index === data.index) {
-              return section
+              return {length:sectionLength,...section}
             }
-            return sec
+            return {length:sectionLength,...sec}
           })
-          console.log(data);
+
           dispatch(newCourse(data));
           router.push({ pathname: "/uploadlessons" })
         }}
