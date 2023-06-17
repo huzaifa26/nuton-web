@@ -14,6 +14,8 @@ const initialValues = {
   courseDesc: "",
   courseCategory: "",
   courseTags: "",
+  price: "",
+  discount: "",
   languages: "",
 };
 
@@ -22,6 +24,7 @@ const PersonalInfoSchema = Yup.object().shape({
   courseTitle: Yup.string().required("Course Title is required"),
   courseDesc: Yup.string().required("Course Description is required"),
   courseCategory: Yup.string().required("Course selection is required"),
+  price: Yup.string().required("Price is required"),
   // courseTags: Yup.string().required("Course tags are required"),
   languages: Yup.string().required("Languages are required"),
 });
@@ -89,8 +92,6 @@ function UploadCourse() {
     }
   };
 
-
-
   return (
     <>
       <Formik
@@ -105,6 +106,8 @@ function UploadCourse() {
             courseDesc: fields.courseDesc,
             courseCategory: fields.courseCategory,
             courseTags: tags,
+            price:fields.price,
+            discount:fields.discount,
             languages: fields.languages,
           }
 
@@ -172,6 +175,7 @@ function UploadCourse() {
                 />
               </div>
             </div>
+
             <div className="row mb-20">
               <label className="form-label col-lg-3">Course Description</label>
               <div className="col-lg-9">
@@ -188,6 +192,48 @@ function UploadCourse() {
                 />
                 <ErrorMessage
                   name="courseDesc"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
+            </div>
+
+            <div className="row mb-20">
+              <label className="form-label col-lg-3">Course Price</label>
+              <div className="col-lg-9">
+                <Field
+                  name="price"
+                  type="number"
+                  className={
+                    "form-control col-lg-9" +
+                    (errors.price && touched.price
+                      ? " is-invalid"
+                      : "")
+                  }
+                />
+                <ErrorMessage
+                  name="price"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
+            </div>
+
+            <div className="row mb-20">
+              <label className="form-label col-lg-3">Discount</label>
+              <div className="col-lg-9">
+                <Field
+                  name="discount"
+                  type="number"
+                  className={
+                    "form-control col-lg-9" +
+                    (errors.discount && touched.discount
+                      ? " is-invalid"
+                      : "")
+                  }
+                />
+                <ErrorMessage
+                  name="discount"
                   component="div"
                   className="invalid-feedback"
                 />

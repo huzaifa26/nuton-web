@@ -99,7 +99,7 @@ const UploadLessonsForm = () => {
         data.sections.forEach((sec) => {
           courseLength = courseLength + sec.length
         })
-        data.courseLength=courseLength;
+        data.courseLength = courseLength;
         try {
           setLoading(true);
           // Upload course thumbnail if present
@@ -124,10 +124,10 @@ const UploadLessonsForm = () => {
             }));
             return { ...section, topics: updatedTopics };
           }))
+          let time = new Date();
+          time = time.getTime()
+          data = { ...data, sections: updatedSections, createdAt: time };
 
-          data = { ...data, sections: updatedSections };
-          console.log(data);
-          return
           if (data?.id) {
             const docRef = doc(db, "course", data.id);
 

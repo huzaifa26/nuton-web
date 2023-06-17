@@ -5,6 +5,7 @@ import { Button, Row, Col } from "reactstrap";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { newCourse } from "@/redux/reducers/courseSlice";
+import { v4 as uuidv4 } from 'uuid';
 
 const PersonalInfoSchema = Yup.object().shape({
   sections: Yup.array().of(
@@ -50,7 +51,14 @@ function UploadCourse() {
   useEffect(() => {
     if (courseData?.sections && courseData?.sections[courseData.index] && courseData?.sections[courseData.index]?.topics) {
       const topics = courseData?.sections[courseData.index].topics;
-      const videos = topics.map((topic) => topic.video);
+      const videos = topics.map((topic, index) => {
+        console.log(topic.video)
+        if (topic.video && topic.video.type === 'video/mp4') {
+          const videoObject = URL.createObjectURL(topic.video);
+          videoRef.current[index].src = videoObject;
+        }
+        return topic.video
+      });
       setVideoArray(videos);
     }
   }, []);
@@ -86,15 +94,16 @@ function UploadCourse() {
   }
 
   const addQuestion = (sectionIndex) => {
-    const numQuestions = parseInt(
-      prompt("Enter the number of questions you want to add:")
-    );
+    const numQuestions = parseInt(prompt("Enter the number of questions you want to add:"));
+
     if (!isNaN(numQuestions)) {
       const updatedSections = [...sections];
-      updatedSections[sectionIndex].questions = Array(numQuestions).fill({
+      const topicToUpdate=updatedSections[sectionIndex];
+      let questions = Array(numQuestions).fill({
         question: "",
         answer: "",
       });
+      updatedSections[sectionIndex]={...topicToUpdate, questions}
       setSections(updatedSections);
     }
   };
@@ -107,23 +116,24 @@ function UploadCourse() {
         enableReinitialize={true}
         onSubmit={(fields) => {
           let data = { ...courseData };
-          let sectionLength=0;
+          let sectionLength = 0;
           const topics = fields.sections.map((topic, index) => {
-            sectionLength=sectionLength+videoRef?.current[index]?.duration
+            sectionLength = sectionLength + videoRef?.current[index]?.duration
             return ({
               ...topic,
               video: videoArray[index],
-              length: videoRef?.current[index]?.duration
+              length: videoRef?.current[index]?.duration,
+              id: uuidv4(),
+              questions:topic.questions
             })
           });
           const section = { ...data.sections[data.index], topics: topics }
           data.sections = data.sections.map((sec, index) => {
             if (index === data.index) {
-              return {length:sectionLength,...section}
+              return { length: sectionLength, ...section }
             }
-            return {length:sectionLength,...sec}
+            return { length: sectionLength, ...sec }
           })
-
           dispatch(newCourse(data));
           router.push({ pathname: "/uploadlessons" })
         }}
