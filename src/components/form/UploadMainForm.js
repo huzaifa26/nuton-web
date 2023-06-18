@@ -43,6 +43,7 @@ function UploadCourse() {
 
   useEffect(() => {
     const specificCourse = allCourses?.find((course) => course.id === id);
+    console.log(specificCourse);
     setIniValues(specificCourse || initialValues);
     setEditCourse(specificCourse);
     setTags(specificCourse?.courseTags || []);
@@ -111,6 +112,7 @@ function UploadCourse() {
             languages: fields.languages,
           }
 
+          console.log(data);
           if (id) {
             let editedCourse = { ...editCourse, ...data }
             dispatch(newCourse(editedCourse));

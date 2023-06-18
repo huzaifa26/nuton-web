@@ -66,6 +66,7 @@ const UploadLessonsForm = () => {
     course['sections'] = sections;
     course['index'] = index;
     dispatch(newCourse(course));
+    console.log(course)
     router.push({ pathname: "/uploadcontent", query: { data: JSON.stringify({ ...course, index }) } })
   }
 

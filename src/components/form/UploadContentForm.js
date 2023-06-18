@@ -33,7 +33,6 @@ function UploadCourse() {
 
   const [sections, setSections] = useState(courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }]);
 
-
   const addSection = () => {
     setSections([...sections, { title: "", video: "", description: "" }]);
   };
@@ -52,16 +51,19 @@ function UploadCourse() {
     if (courseData?.sections && courseData?.sections[courseData.index] && courseData?.sections[courseData.index]?.topics) {
       const topics = courseData?.sections[courseData.index].topics;
       const videos = topics.map((topic, index) => {
-        console.log(topic.video)
         if (topic.video && topic.video.type === 'video/mp4') {
           const videoObject = URL.createObjectURL(topic.video);
           videoRef.current[index].src = videoObject;
+        }else {
+          videoRef.current[index].src = topic.video;
         }
         return topic.video
       });
       setVideoArray(videos);
     }
   }, []);
+
+  console.log(videoRef)
 
   const [sectionErrors, setSectionErrors] = useState(Array(sections.length).fill(false));
 
