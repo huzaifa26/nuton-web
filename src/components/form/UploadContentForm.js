@@ -15,7 +15,12 @@ const PersonalInfoSchema = Yup.object().shape({
       questions: Yup.array().of(
         Yup.object().shape({
           question: Yup.string().required("Question is required"),
-          answer: Yup.string().required("Answer is required"),
+          options: Yup.array().of(
+            Yup.object().shape({
+              option: Yup.string().required("Option is required"),
+              isCorrect: Yup.boolean()
+            })
+          ).min(4, 'There must be at least 4 answer options').required('At least one option must be marked as correct')
         })
       ),
     })
@@ -23,18 +28,17 @@ const PersonalInfoSchema = Yup.object().shape({
 });
 
 function UploadCourse() {
-
   const router = useRouter();
   const dispatch = useDispatch();
   const courseData = useSelector((state) => state.course.newCourse);
   const initialValues = {
-    sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }],
+    sections: courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "", questions: [] }],
   };
 
-  const [sections, setSections] = useState(courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "" }]);
+  const [sections, setSections] = useState(courseData?.sections[courseData.index]?.topics || [{ title: "", video: "", description: "", questions: [] }]);
 
   const addSection = () => {
-    setSections([...sections, { title: "", video: "", description: "" }]);
+    setSections([...sections, { title: "", video: "", description: "", questions: [] }]);
   };
 
   const deleteSection = (index) => {
@@ -54,7 +58,7 @@ function UploadCourse() {
         if (topic.video && topic.video.type === 'video/mp4') {
           const videoObject = URL.createObjectURL(topic.video);
           videoRef.current[index].src = videoObject;
-        }else {
+        } else {
           videoRef.current[index].src = topic.video;
         }
         return topic.video
@@ -63,10 +67,7 @@ function UploadCourse() {
     }
   }, []);
 
-  console.log(videoRef)
-
   const [sectionErrors, setSectionErrors] = useState(Array(sections.length).fill(false));
-
 
   const videoUploadHandler = (e, index) => {
     const file = e.target.files[0];
@@ -90,7 +91,7 @@ function UploadCourse() {
       const updatedErrors = [...sectionErrors];
       updatedErrors[index] = true;
       setSectionErrors(updatedErrors);
-      fileInputsRef.current[index].value = null
+      fileInputsRef.current[index].value = null;
       console.log('Invalid video format. Please select an MP4 video.');
     }
   }
@@ -100,12 +101,12 @@ function UploadCourse() {
 
     if (!isNaN(numQuestions)) {
       const updatedSections = [...sections];
-      const topicToUpdate=updatedSections[sectionIndex];
+      const topicToUpdate = updatedSections[sectionIndex];
       let questions = Array(numQuestions).fill({
         question: "",
-        answer: "",
+        options: Array(4).fill({ option: "", isCorrect: false })
       });
-      updatedSections[sectionIndex]={...topicToUpdate, questions}
+      updatedSections[sectionIndex] = { ...topicToUpdate, questions }
       setSections(updatedSections);
     }
   };
@@ -120,13 +121,13 @@ function UploadCourse() {
           let data = { ...courseData };
           let sectionLength = 0;
           const topics = fields.sections.map((topic, index) => {
-            sectionLength = sectionLength + videoRef?.current[index]?.duration
+            sectionLength = sectionLength + videoRef?.current[index]?.duration;
             return ({
               ...topic,
               video: videoArray[index],
               length: videoRef?.current[index]?.duration,
               id: uuidv4(),
-              questions:topic.questions
+              questions: topic.questions
             })
           });
           const section = { ...data.sections[data.index], topics: topics }
@@ -223,7 +224,7 @@ function UploadCourse() {
                     />
                   </Col>
                 </Row>
-                {section?.questions?.length > 0 ? (
+                {section.questions.length > 0 ? (
                   section.questions.map((question, questionIndex) => (
                     <div key={questionIndex}>
                       <Row className="mb-20">
@@ -249,29 +250,43 @@ function UploadCourse() {
                           />
                         </Col>
                       </Row>
-                      <Row className="mb-20">
-                        <Col lg="3">
-                          <label className="form-label">Answer:</label>
-                        </Col>
-                        <Col lg="9">
-                          <Field
-                            name={`sections[${sectionIndex}].questions[${questionIndex}].answer`}
-                            type="text"
-                            className={
-                              "form-control" +
-                              (errors.sections?.[sectionIndex]?.questions?.[questionIndex]?.answer &&
-                                touched.sections?.[sectionIndex]?.questions?.[questionIndex]?.answer
-                                ? " is-invalid"
-                                : "")
-                            }
-                          />
-                          <ErrorMessage
-                            name={`sections[${sectionIndex}].questions[${questionIndex}].answer`}
-                            component="div"
-                            className="invalid-feedback"
-                          />
-                        </Col>
-                      </Row>
+                      {question.options.map((option, optionIndex) => (
+                        <div key={optionIndex}>
+                          <Row className="mb-20">
+                            <Col lg="3">
+                              <label className="form-label">Answer Option {optionIndex + 1}:</label>
+                            </Col>
+                            <Col lg="6">
+                              <Field
+                                name={`sections[${sectionIndex}].questions[${questionIndex}].options[${optionIndex}].option`}
+                                type="text"
+                                className={
+                                  "form-control" +
+                                  (errors.sections?.[sectionIndex]?.questions?.[questionIndex]?.options?.[optionIndex]?.option &&
+                                    touched.sections?.[sectionIndex]?.questions?.[questionIndex]?.options?.[optionIndex]?.option
+                                    ? " is-invalid"
+                                    : "")
+                                }
+                              />
+                              <ErrorMessage
+                                name={`sections[${sectionIndex}].questions[${questionIndex}].options[${optionIndex}].option`}
+                                component="div"
+                                className="invalid-feedback"
+                              />
+                            </Col>
+                            <Col lg="3">
+                              <div className="form-check">
+                                <Field
+                                  type="checkbox"
+                                  name={`sections[${sectionIndex}].questions[${questionIndex}].options[${optionIndex}].isCorrect`}
+                                  className="form-check-input"
+                                />
+                                <label className="form-check-label">Correct</label>
+                              </div>
+                            </Col>
+                          </Row>
+                        </div>
+                      ))}
                     </div>
                   ))
                 ) : (
