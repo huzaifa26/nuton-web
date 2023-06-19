@@ -137,6 +137,7 @@ function UploadCourse() {
             }
             return { length: sectionLength, ...sec }
           })
+
           dispatch(newCourse(data));
           router.push({ pathname: "/uploadlessons" })
         }}
