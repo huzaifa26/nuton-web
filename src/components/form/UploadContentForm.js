@@ -122,12 +122,13 @@ function UploadCourse() {
           let sectionLength = 0;
           const topics = fields.sections.map((topic, index) => {
             sectionLength = sectionLength + videoRef?.current[index]?.duration;
+            const questions=topic?.questions?.map((question)=>{return {id:uuidv4(),...question}})
             return ({
               ...topic,
               video: videoArray[index],
               length: videoRef?.current[index]?.duration,
               id: uuidv4(),
-              questions: topic.questions
+              questions: questions || null
             })
           });
           const section = { ...data.sections[data.index], topics: topics }
