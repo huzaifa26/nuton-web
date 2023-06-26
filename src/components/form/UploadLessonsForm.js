@@ -46,6 +46,20 @@ const UploadLessonsForm = () => {
     });
   };
 
+  const handleFreeSectionChange = (event, index) => {
+    const { checked } = event.target;
+    setSections((prevSections) => {
+      const updatedSections = [...prevSections];
+      updatedSections[index] = {
+        ...updatedSections[index],
+        free: checked,
+      };
+
+      console.log(updatedSections);
+      return updatedSections;
+    });
+  };
+
   const handleRemoveSection = (index) => {
     setSections((prevSections) => {
       const updatedSections = [...prevSections];
@@ -59,6 +73,7 @@ const UploadLessonsForm = () => {
       return updatedSections;
     });
   };
+
 
   const handleCourseContent = (index) => {
     let course = { ...courseData };
@@ -86,6 +101,7 @@ const UploadLessonsForm = () => {
   }
 
   const [loading, setLoading] = useState(false)
+  const [checkBox, setCheckBox] = useState(false);
 
   return (
     <Formik
@@ -129,6 +145,9 @@ const UploadLessonsForm = () => {
           time = time.getTime()
           data = { ...data, sections: updatedSections, createdAt: time };
 
+
+          console.log(data);
+          return
           if (data?.id) {
             const docRef = doc(db, "course", data.id);
 
@@ -174,6 +193,19 @@ const UploadLessonsForm = () => {
                 value={section.name}
                 onChange={(event) => handleSectionNameChange(event, index)}
               />
+              <div className="flex gap-[10px] items-center px-[10px]">
+                <label>Free</label>
+                <Field
+                  key={index}
+                  type="checkbox"
+                  name={`sections[${index}].free`}
+                  id={`sections[${index}].free`}
+                  checked={section.free || false}
+                  onChange={(e) => {
+                    handleFreeSectionChange(e, index);
+                  }}
+                />
+              </div>
               <button
                 type="button"
                 className="btn btn-link"
