@@ -145,9 +145,6 @@ const UploadLessonsForm = () => {
           time = time.getTime()
           data = { ...data, sections: updatedSections, createdAt: time };
 
-
-          console.log(data);
-          return
           if (data?.id) {
             const docRef = doc(db, "course", data.id);
 

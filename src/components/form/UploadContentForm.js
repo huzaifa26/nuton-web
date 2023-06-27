@@ -122,7 +122,7 @@ function UploadCourse() {
           let sectionLength = 0;
           const topics = fields.sections.map((topic, index) => {
             sectionLength = sectionLength + videoRef?.current[index]?.duration;
-            const questions=topic?.questions?.map((question)=>{return {id:uuidv4(),...question}})
+            const questions = topic?.questions?.map((question) => { return { id: uuidv4(), ...question } })
             return ({
               ...topic,
               video: videoArray[index],
@@ -226,8 +226,8 @@ function UploadCourse() {
                     />
                   </Col>
                 </Row>
-                {section.questions.length > 0 ? (
-                  section.questions.map((question, questionIndex) => (
+                {section?.questions?.length > 0 ? (
+                  section?.questions?.map((question, questionIndex) => (
                     <div key={questionIndex}>
                       <Row className="mb-20">
                         <Col lg="3">
