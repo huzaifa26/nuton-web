@@ -125,7 +125,7 @@ function UploadCourse() {
         {({ errors, touched }) => (
           <Form>
             <div className="row mb-20">
-              <label className="mt-5 form-label col-lg-3">Course Thumbnail</label>
+              <label className="mt-12 form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
                 <img style={{ marginLeft: '157px' }} src={image && URL.createObjectURL(image) || iniValues?.courseThambnail || image} />
                 {/* <div className={
@@ -290,7 +290,7 @@ function UploadCourse() {
                     }
                   }}
                 />
-                <div className="flex gap-[0.521vw] px-[20px] py-[10px]">
+                <div className="overflow-scroll flex gap-[0.521vw] px-[20px] py-[10px]">
                   {tags?.map((tag, index) => {
                     return (
                       <div className="flex gap-[0.521vw] justify-center h-[30px] px-[10px]">

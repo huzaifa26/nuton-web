@@ -4881,7 +4881,13 @@
  
  .overflow-auto {
    overflow: auto !important; }
- 
+
+  .overflow-y-auto{
+    overflow-y: auto;
+  }
+  .overflow-x-auto{
+    overflow-x: auto;
+  }
  .overflow-hidden {
    overflow: hidden !important; }
  
@@ -4889,8 +4895,18 @@
    overflow: visible !important; }
  
  .overflow-scroll {
-   overflow: scroll !important; }
- 
+   overflow: scroll !important; 
+  }
+
+  .overflow-scroll::-webkit-scrollbar-track {
+    display: none; 
+   }
+
+  .overflow-scroll::-webkit-scrollbar {
+  height: 7px; 
+  }
+
+
  .d-inline {
    display: inline !important; }
  
