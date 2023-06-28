@@ -87,10 +87,8 @@ function UpdateAvatar() {
                                             width: "150px"
                                         }}
                                         className="rounded-circle"
-                                        // src="/images/avatar/1.png"
                                         src={image ? URL.createObjectURL(image) : user?.image ? user?.image : "images/avatar/1.png"}
                                         alt=""
-                                        // width="40"
                                     />
                                     <div className="ml-5 media-body">
                                         <h4 className="mb-0">{user?.name}</h4>
