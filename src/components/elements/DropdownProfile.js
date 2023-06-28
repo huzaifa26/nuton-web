@@ -33,13 +33,13 @@ function DropdownProfile() {
         <>
             {notificationList.map((item, id) => (
                 <>
-                    <Link href={`/${item.path}`} key={id}>
-
+                    <Link href={`/${item.path}`} key={id} legacyBehavior>
+                        <a className={`dropdown-item ps-20 pe-20 pt-10 pb-10 d-flex align-items-center border-top  ${item.color}`}>
                             <span className="fs-18 text-primary me-10">
                                 <i className={item.icon}></i>
                             </span>
                             {item.text}
-                        
+                        </a>
                     </Link>
                 </>
             ))}

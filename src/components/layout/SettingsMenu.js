@@ -26,7 +26,7 @@ function SettingsMenu() {
                         <i className="ri-arrow-right-s-line"></i> Application
                     </Link>
                 </li>
-                <li
+                {/* <li
                     className={
                         router.pathname == "/settings-security" ? "active" : ""
                     }
@@ -34,8 +34,8 @@ function SettingsMenu() {
                     <Link href="/settings-security">
                         <i className="ri-arrow-right-s-line"></i> Security
                     </Link>
-                </li>
-                <li
+                </li> */}
+                {/* <li
                     className={
                         router.pathname == "/settings-activity" ? "active" : ""
                     }
@@ -43,7 +43,7 @@ function SettingsMenu() {
                     <Link href="/settings-activity">
                         <i className="ri-arrow-right-s-line"></i> Activity
                     </Link>
-                </li>
+                </li> */}
                 <li
                     className={
                         router.pathname == "/settings-payment-method"
@@ -55,7 +55,7 @@ function SettingsMenu() {
                         <i className="ri-arrow-right-s-line"></i> Payment Method
                     </Link>
                 </li>
-                <li
+                {/* <li
                     className={
                         router.pathname == "/settings-api" ? "active" : ""
                     }
@@ -63,7 +63,7 @@ function SettingsMenu() {
                     <Link href="/settings-api">
                         <i className="ri-arrow-right-s-line"></i> API
                     </Link>
-                </li>
+                </li> */}
             </ul>
         </>
     );

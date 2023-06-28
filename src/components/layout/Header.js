@@ -22,7 +22,7 @@ function Header() {
                                                 />
                                         </Link>
                                     </div>
-                                    <div className="search">
+                                    {/* <div className="search">
                                         <form action="#">
                                             <div className="input-group">
                                                 <input
@@ -35,7 +35,7 @@ function Header() {
                                                 </span>
                                             </div>
                                         </form>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className="header-right">
@@ -50,8 +50,8 @@ function Header() {
                                             <i className="ri-sun-line"></i>
                                         </span>
                                     </div>
-
-                                    <UncontrolledDropdown
+                                    
+                                    {/* <UncontrolledDropdown
                                         tag="div"
                                         className="nav-item dropdown notification"
                                     >
@@ -81,9 +81,9 @@ function Header() {
                                                 </Link>
                                             </div>
                                         </DropdownMenu>
-                                    </UncontrolledDropdown>
+                                    </UncontrolledDropdown> */}
 
-                                    <UncontrolledDropdown
+                                    {/* <UncontrolledDropdown
                                         tag="div"
                                         className="dropdown profile_log"
                                     >
@@ -113,26 +113,34 @@ function Header() {
                                             right
                                             className="dropdown-menu"
                                         >
-                                            <div className="user-email">
-                                                <div className="user">
-                                                    <span className="thumb">
-                                                        <img
-                                                            src="/images/avatar/1.png"
-                                                            alt=""
-                                                            // width="40"
-                                                        />
-                                                    </span>
-                                                    <div>
-                                                        <h5>Fiaz Abdullah</h5>
-                                                        <span>
-                                                            codeefly@gmail.com
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                             <DropdownProfile />
                                         </DropdownMenu>
-                                    </UncontrolledDropdown>
+                                    </UncontrolledDropdown> */}
+
+                                    <Link href="settings-profile" legacyBehavior>
+                                        <div className="profile_log">
+                                            
+                                            <div className="ml-1 user icon-menu active">
+                                                <span className="thumb">
+                                                    <img
+                                                        style={{
+                                                            objectFit:"fill",
+                                                            height:"100%",
+                                                            width:"100%"
+                                                        }}
+                                                        className="rounded-circle"
+                                                        // src="/images/avatar/1.png"
+                                                        src={user?.image || "/images/avatar/1.png"}
+                                                        alt=""
+                                                        // width="40"
+                                                    />
+                                                </span>
+                                            </div>
+                                            <div>Profile</div>
+                                        </div>
+                                    </Link>
+
                                 </div>
                             </div>
                         </div>
