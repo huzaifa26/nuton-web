@@ -125,9 +125,9 @@ function UploadCourse() {
         {({ errors, touched }) => (
           <Form>
             <div className="row mb-20">
-              <label className="form-label col-lg-3">Course Thumbnail</label>
+              <label className="mt-5 form-label col-lg-3">Course Thumbnail</label>
               <div className="col-lg-9">
-                <img src={image && URL.createObjectURL(image) || iniValues?.courseThambnail || image} />
+                <img style={{ marginLeft: '157px' }} src={image && URL.createObjectURL(image) || iniValues?.courseThambnail || image} />
                 {/* <div className={
                   "form-control col-lg-9" +
                   (errors.courseThambnail && touched.courseThambnail
@@ -140,7 +140,7 @@ function UploadCourse() {
                   type="file"
                   id="image"
                   className={
-                    "form-control col-lg-9" +
+                    "form-control col-lg-9 mt-10" +
                     (errors.courseThambnail && touched.courseThambnail
                       ? " is-invalid"
                       : "")
@@ -158,7 +158,7 @@ function UploadCourse() {
               </div>
             </div>
             <div className="row mb-20">
-              <label className="form-label col-lg-3">Course Title</label>
+              <label className="mt-1 form-label col-lg-3">Course Title</label>
               <div className="col-lg-9">
                 <Field
                   name="courseTitle"
