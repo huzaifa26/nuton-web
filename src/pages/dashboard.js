@@ -20,6 +20,7 @@ function Home({ earningHistory, totalSales }) {
         <SetReduxState>
             <Layout
                 headTitle="Dashboard"
+                pageTitle={"Dashboard"}
                 pageClass={"dashboard"}
                 parent={"Home"}
                 child={"Dashboard"}

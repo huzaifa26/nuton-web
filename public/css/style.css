@@ -5761,7 +5761,8 @@
    border-radius: 0.3rem !important; }
  
  .rounded-circle {
-   border-radius: 50% !important; }
+   border-radius: 50% !important;
+  }
  
  .rounded-pill {
    border-radius: 50rem !important; }
@@ -44490,11 +44491,9 @@
        width: 35px;
        color: #fff;
        text-align: center;
-       background: #20d489;
        border-radius: 50px; }
        .profile_log .user .thumb img {
-         border-radius: 50px;
-         max-width: 30px; }
+        border-radius: 50px; }
    .profile_log .dropdown-menu {
      border: 0px;
      padding: 0px;

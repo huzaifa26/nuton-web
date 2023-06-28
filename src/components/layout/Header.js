@@ -51,9 +51,9 @@ function Header() {
                                         </span>
                                     </div>
                                     
-                                    {/* <UncontrolledDropdown
+                                    <UncontrolledDropdown
                                         tag="div"
-                                        className="nav-item dropdown notification"
+                                        className="mt-3 nav-item dropdown notification"
                                     >
                                         <DropdownToggle
                                             tag="div"
@@ -81,7 +81,7 @@ function Header() {
                                                 </Link>
                                             </div>
                                         </DropdownMenu>
-                                    </UncontrolledDropdown> */}
+                                    </UncontrolledDropdown>
 
                                     {/* <UncontrolledDropdown
                                         tag="div"
@@ -137,7 +137,6 @@ function Header() {
                                                     />
                                                 </span>
                                             </div>
-                                            <div>Profile</div>
                                         </div>
                                     </Link>
 

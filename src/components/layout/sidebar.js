@@ -35,11 +35,11 @@ function Sidebar() {
             name: "Upload",
             path: "uploadmain",
         },
-        {
-            icon: "ri-empathize-fill",
-            name: "Leaderboard",
-            path: "leader-board",
-        },
+        // {
+        //     icon: "ri-empathize-fill",
+        //     name: "Leaderboard",
+        //     path: "leader-board",
+        // },
         {
             icon: "ri-logout-circle-line",
             name: "Logout",
