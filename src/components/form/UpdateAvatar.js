@@ -78,17 +78,19 @@ function UpdateAvatar() {
                                     className="invalid-feedback"
                                 />
                             </div>
-                            <div className="col-xxl-12">
-                                <div className="d-flex align-items-center mb-16">
+                            <div className="col-xxl-12 ">
+                                <div className="d-flex align-items-center mb-20" >
                                     <img
-                                        className="rounded-circle me-0 me-sm-3"
-                                        // src={"images/avatar/1.png"}
+                                        style={{
+                                            objectFit:"fill",
+                                            height: "150px",
+                                            width: "150px"
+                                        }}
+                                        className="rounded-circle"
                                         src={image ? URL.createObjectURL(image) : user?.image ? user?.image : "images/avatar/1.png"}
-                                        width="55"
-                                        height="55"
                                         alt=""
                                     />
-                                    <div className="media-body">
+                                    <div className="ml-5 media-body">
                                         <h4 className="mb-0">{user?.name}</h4>
                                         <p className="mb-0">
                                             Max file size is 20mb

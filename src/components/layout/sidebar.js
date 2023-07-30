@@ -15,16 +15,16 @@ function Sidebar() {
             name: "Courses",
             path: "courses",
         },
-        // {
-        //     icon: "ri-wallet-3-fill",
-        //     name: "Wallet",
-        //     path: "wallet",
-        // },
-        // {
-        //     icon: "ri-hand-coin-fill",
-        //     name: "Withdraw",
-        //     path: "withdraw",
-        // },
+         {
+             icon: "ri-wallet-3-fill",
+             name: "Wallet",
+             path: "wallet",
+         },
+         {
+             icon: "ri-hand-coin-fill",
+             name: "Withdraw",
+             path: "withdraw",
+         },
         {
             icon: "ri-message-3-fill",
             name: "Chat",
@@ -35,26 +35,22 @@ function Sidebar() {
             name: "Upload",
             path: "uploadmain",
         },
+        // {
+        //     icon: "ri-empathize-fill",
+        //     name: "Leaderboard",
+        //     path: "leader-board",
+        // },
         {
-            icon: "ri-empathize-fill",
-            name: "Board",
-            path: "leader-board",
+            icon: "ri-logout-circle-line",
+            name: "Logout",
+            path: "signin",
+
         }
     ];
 
     return (
         <>
             <div className="sidebar">
-                <div className="brand-logo text-center">
-                    {/* <Link href="/">
-                        <a className="full-logo">
-                            <img src="./images/logoi.png" alt="" width="50" />
-                        </a>
-                    </Link> */}
-                    <Link href="/">
-                        <img src="./images/egeria.png" alt="" width="60" />
-                    </Link>
-                </div>
                 <div className="menu">
                     <ul>
                         {mainNavLink.map((item, id) => (

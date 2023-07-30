@@ -29,14 +29,7 @@ const Layout = ({
 
                 <div className="content-body" style={{ minHeight: height - 122 }}>
                     <div className="container">
-                        {pageTitle && (
-                            <PageTitle
-                                pageTitle={"pageTitle"}
-                                pageTitleSub={"pageTitleSub"}
-                                parent={"parent"}
-                                child={"child"}
-                            />
-                        )}
+                      
                         {children}
                     </div>
                 </div>

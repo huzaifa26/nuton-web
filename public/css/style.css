@@ -1456,7 +1456,6 @@
    width: 100%;
  
  }
- 
  .table-light {
    --bs-table-bg: #f5f8fa;
    --bs-table-striped-bg: #e9ecee;
@@ -1668,7 +1667,7 @@
    .form-control-color::-webkit-color-swatch {
      height: 1.5em;
      border-radius: 6px; }
- 
+
  .form-select {
    display: block;
    width: 100%;
@@ -4882,7 +4881,13 @@
  
  .overflow-auto {
    overflow: auto !important; }
- 
+
+  .overflow-y-auto{
+    overflow-y: auto;
+  }
+  .overflow-x-auto{
+    overflow-x: auto;
+  }
  .overflow-hidden {
    overflow: hidden !important; }
  
@@ -4890,8 +4895,18 @@
    overflow: visible !important; }
  
  .overflow-scroll {
-   overflow: scroll !important; }
- 
+   overflow: scroll !important; 
+  }
+
+  .overflow-scroll::-webkit-scrollbar-track {
+    display: none; 
+   }
+
+  .overflow-scroll::-webkit-scrollbar {
+  height: 7px; 
+  }
+
+
  .d-inline {
    display: inline !important; }
  
@@ -5762,7 +5777,8 @@
    border-radius: 0.3rem !important; }
  
  .rounded-circle {
-   border-radius: 50% !important; }
+   border-radius: 50% !important;
+  }
  
  .rounded-pill {
    border-radius: 50rem !important; }
@@ -44413,7 +44429,7 @@
  
  .notification {
    cursor: pointer; }
-   .notification .notify-bell {
+   .notification {
      margin-right: 30px;
      font-size: 22px; }
      @media only screen and (max-width: 767px) {
@@ -44491,11 +44507,9 @@
        width: 35px;
        color: #fff;
        text-align: center;
-       background: #20d489;
        border-radius: 50px; }
        .profile_log .user .thumb img {
-         border-radius: 50px;
-         max-width: 30px; }
+        border-radius: 50px; }
    .profile_log .dropdown-menu {
      border: 0px;
      padding: 0px;
@@ -44757,13 +44771,13 @@
        border-radius: 0px; } }
  
  .brand-logo {
-   margin: 20px 20px 20px; }
+   margin: 20px 20px 20px;}
    @media only screen and (max-width: 767px) {
      .brand-logo {
        display: none; } }
  
  .menu {
-   margin-top: 30px;
+   margin-top: 10px;
    padding: 5px;
    position: relative; }
    @media only screen and (max-width: 767px) {
