@@ -128,7 +128,8 @@ function UploadCourse() {
               video: videoArray[index],
               length: videoRef?.current[index]?.duration,
               id: uuidv4(),
-              questions: questions || null
+              questions: questions || null,
+              quizId: questions ? uuidv4() : null
             })
           });
           const section = { ...data.sections[data.index], topics: topics }

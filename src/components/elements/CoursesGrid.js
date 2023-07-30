@@ -133,7 +133,7 @@ function CoursesGrid() {
                                 </div>
                                 <p>{item.desc}</p>
                                 <div className="courses-action">
-                                    <p className='cursor-pointer' onClick={() => router.push({ pathname: "uploadmain", query:{id:item.id} })}>Edit</p>
+                                    <p className='cursor-pointer' onClick={() => {console.log(item);router.push({ pathname: "uploadmain", query:{id:item.id} })}}>Edit</p>
                                     <Button onClick={AnalyticToggle} className="btn btn-light text-dark">Analytics</Button>
                                     <Button onClick={ReviewToggle} className="btn btn-light text-dark">Reviews</Button>
                                 </div>
